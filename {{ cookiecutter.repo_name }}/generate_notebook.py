@@ -113,8 +113,17 @@ def create_notebook(create_notebook, notebook_name, add_title):
             json.dump(notebook_content, f)
 
 if __name__ == "__main__":
-    create_notebook(
-        '{{ cookiecutter.create_notebook }}',
-        '{{ cookiecutter.notebook_name }}',
-        '{{ cookiecutter.add_title }}'
-    )
+     # Path to the cookiecutter context JSON file
+    context_file = os.path.join(os.path.abspath(os.path.dirname(__file__)), ".ccds.json")
+    
+    # Read the cookiecutter context
+    with open(context_file, 'r') as f:
+        context = json.load(f)
+    
+    # Extract values from the context
+    create_notebook = context.get("create_notebook", "No")
+    notebook_name = context.get("notebook_name", "notebook")
+    add_title = context.get("add_title", "No")
+    
+    # Call the function to create the notebook
+    create_notebook(create_notebook, notebook_name, add_title)
