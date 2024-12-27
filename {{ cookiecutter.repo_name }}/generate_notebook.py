@@ -113,7 +113,6 @@ def create_notebook(create_notebook, notebook_name, add_title):
             json.dump(notebook_content, f)
 
 if __name__ == "__main__":
-    from ccds import ccds_variables
     create_notebook(
         '{{ cookiecutter.create_notebook }}',
         '{{ cookiecutter.notebook_name }}',
