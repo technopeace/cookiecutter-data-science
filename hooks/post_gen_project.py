@@ -194,5 +194,5 @@ if create_notebook_var == 'Yes' or True:
         "nbformat": 4,
         "nbformat_minor": 5
     }
-    with open('C:\Users\u27f79\.cookiecutters\cookiecutter-data-science\deneme.ipynb'), 'w') as f:
+    with open('C:\\Users\\u27f79\\.cookiecutters\\cookiecutter-data-science\\deneme.ipynb'), 'w') as f:
         json.dump(notebook_content, f)
