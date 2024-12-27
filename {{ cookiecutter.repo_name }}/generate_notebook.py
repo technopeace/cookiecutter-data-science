@@ -2,9 +2,7 @@ import json
 import os
 
 def create_notebook(create_notebook, notebook_name, add_title):
-    print("create_notebook;" + create_notebook)
-    print("notebook_name;" + notebook_name)
-    print("add_title;" + add_title)
+    print("create_notebook;" + str(create_notebook))
     if create_notebook == 'Yes' or True:
         notebook_content = {
             "cells": [
@@ -114,16 +112,16 @@ def create_notebook(create_notebook, notebook_name, add_title):
 
 if __name__ == "__main__":
      # Path to the cookiecutter context JSON file
-    context_file = os.path.join(os.path.abspath(os.path.dirname(__file__)), ".ccds.json")
+    context_file = os.path.join(os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), os.path.pardir)), "ccds.json")
     
     # Read the cookiecutter context
     with open(context_file, 'r') as f:
         context = json.load(f)
     
     # Extract values from the context
-    create_notebook = context.get("create_notebook", "No")
+    create_notebook_var = context.get("create_notebook", "No")
     notebook_name = context.get("notebook_name", "notebook")
     add_title = context.get("add_title", "No")
     
     # Call the function to create the notebook
-    create_notebook(create_notebook, notebook_name, add_title)
+    create_notebook(create_notebook_var, notebook_name, add_title)
