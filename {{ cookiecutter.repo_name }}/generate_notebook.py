@@ -110,4 +110,4 @@ def create_notebook(create_notebook, notebook_name, add_title):
             json.dump(notebook_content, f)
 
 if __name__ == "__main__":
-    create_notebook('{{ cookiecutter.create_notebook }}', '{{ cookiecutter.notebook_name }}')
+    create_notebook('{{ cookiecutter.create_notebook }}', '{{ cookiecutter.notebook_name }}', '{{ cookiecutter.add_title }}')
