@@ -83,7 +83,7 @@ for generated_path in Path("{{ cookiecutter.module_name }}").iterdir():
         generated_path.write_text("")
 # {% endif %}
 
-context_file = os.path.join(os.path.abspath(os.path.dirname(__file__)), "ccds.json")
+context_file = os.path.join(os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), os.path.pardir)), "ccds.json")
     
 # Read the cookiecutter context
 with open(context_file, 'r') as f:
