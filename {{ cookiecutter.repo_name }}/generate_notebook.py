@@ -114,6 +114,8 @@ def create_notebook(create_notebook, notebook_name, add_title):
 
 if __name__ == "__main__":
     from ccds import ccds_variables
-    create_notebook(ccds_variables['create_notebook'], 
-                    ccds_variables['notebook_name'], 
-                    ccds_variables['add_title'])
+    create_notebook(
+        '{{ cookiecutter.create_notebook }}',
+        '{{ cookiecutter.notebook_name }}',
+        '{{ cookiecutter.add_title }}'
+    )
