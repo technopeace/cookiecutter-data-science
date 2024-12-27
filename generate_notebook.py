@@ -112,7 +112,7 @@ def create_notebook(create_notebook, notebook_name, add_title):
 
 if __name__ == "__main__":
      # Path to the cookiecutter context JSON file
-    context_file = os.path.join(os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), os.path.pardir)), "ccds.json")
+    context_file = os.path.join(os.path.join(os.path.abspath(os.path.dirname(__file__)), "ccds.json")
     
     # Read the cookiecutter context
     with open(context_file, 'r') as f:
