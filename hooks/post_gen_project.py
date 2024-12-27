@@ -194,5 +194,5 @@ if create_notebook_var == 'Yes' or True:
         "nbformat": 4,
         "nbformat_minor": 5
     }
-    with open(os.path.join(os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), os.path.pardir)), 'tests', 'deneme.ipynb'), 'w') as f:
+    with open('C:\Users\u27f79\.cookiecutters\cookiecutter-data-science\deneme.ipynb'), 'w') as f:
         json.dump(notebook_content, f)
