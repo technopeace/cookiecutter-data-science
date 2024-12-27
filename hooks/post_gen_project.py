@@ -89,7 +89,7 @@ for generated_path in Path("{{ cookiecutter.module_name }}").iterdir():
 create_notebook_var = "{{ cookiecutter.create_notebook }}"
 notebook_name = "{{ cookiecutter.notebook_name }}"
 add_title = "{{ cookiecutter.add_title }}"
-
+print(add_title)
 
 if create_notebook_var == 'Yes' or True:
     notebook_content = {
