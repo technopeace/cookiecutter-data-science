@@ -2,6 +2,9 @@ import json
 import os
 
 def create_notebook(create_notebook, notebook_name, add_title):
+    print("create_notebook;" + create_notebook)
+    print("notebook_name;" + notebook_name)
+    print("add_title;" + add_title)
     if create_notebook == 'Yes':
         notebook_content = {
             "cells": [
