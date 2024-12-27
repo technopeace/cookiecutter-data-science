@@ -1,7 +1,7 @@
 import json
 import os
 
-def create_notebook(create_notebook, notebook_name, add_title, dataset_storage):
+def create_notebook(create_notebook, notebook_name, add_title):
     print("create_notebook;" + create_notebook)
     print("notebook_name;" + notebook_name)
     print("add_title;" + add_title)
@@ -109,11 +109,8 @@ def create_notebook(create_notebook, notebook_name, add_title, dataset_storage):
             "nbformat": 4,
             "nbformat_minor": 5
         }
-        if dataset_storage.get('s3'):
-            s3_bucket = dataset_storage['s3']['bucket']
         with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'notebooks', 'deneme.ipynb'), 'w') as f:
             json.dump(notebook_content, f)
 
 if __name__ == "__main__":
-    create_notebook('{{ cookiecutter.create_notebook }}', '{{ cookiecutter.notebook_name }}', '{{ cookiecutter.add_title }}',
-                    {{ cookiecutter.dataset_storage }})
+    create_notebook('{{ cookiecutter.create_notebook }}', '{{ cookiecutter.notebook_name }}', '{{ cookiecutter.add_title }}')
