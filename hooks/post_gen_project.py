@@ -83,16 +83,11 @@ for generated_path in Path("{{ cookiecutter.module_name }}").iterdir():
         generated_path.write_text("")
 # {% endif %}
 
-context_file = os.path.join(os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), os.path.pardir)), "ccds.json")
-    
-# Read the cookiecutter context
-with open(context_file, 'r') as f:
-    context = json.load(f)
 
 # Extract values from the context
-create_notebook_var = context.get("create_notebook", "No")
-notebook_name = context.get("notebook_name", "notebook")
-add_title = context.get("add_title", "No")
+create_notebook_var = "{{ cookiecutter.create_notebook }}"
+notebook_name = "{{ cookiecutter.notebook_name }}"
+add_title = "{{ cookiecutter.add_title }}"
 
 print("create_notebook;" + str(create_notebook))
 if create_notebook == 'Yes' or True:
