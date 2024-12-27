@@ -114,7 +114,7 @@ if create_notebook_var == 'Yes' or True:
                 "metadata": {},
                 "outputs": [],
                 "source": [
-                    "import pandas as pd\n",
+                    "import pandas as pd\n" if add_title == 'Yes' else "",
                     "from sklearn.calibration import LabelEncoder\n",
                     "import yaml\n",
                     "import os\n",
