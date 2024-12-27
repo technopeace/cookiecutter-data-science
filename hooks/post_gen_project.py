@@ -89,8 +89,8 @@ create_notebook_var = "{{ cookiecutter.create_notebook }}"
 notebook_name = "{{ cookiecutter.notebook_name }}"
 add_title = "{{ cookiecutter.add_title }}"
 
-print("create_notebook;" + str(create_notebook))
-if create_notebook == 'Yes' or True:
+
+if create_notebook_var == 'Yes' or True:
     notebook_content = {
         "cells": [
             {
