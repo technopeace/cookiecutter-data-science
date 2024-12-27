@@ -34,6 +34,5 @@
     "add_title": [
         "Yes",
         "No"
-    ],
-    "post_gen_project_hook": "python3 generate_notebook.py"
+    ]
 }
