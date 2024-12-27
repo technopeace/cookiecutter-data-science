@@ -1,3 +1,21 @@
 {
+    "project_name": "My Brake Emission Project",
+    "author_name": "Your Name",
+    "open_source_license": [
+        "MIT",
+        "BSD-3-Clause",
+        "No license"
+    ],
+    "python_interpreter": [
+        "python3"
+    ],
+    "create_notebook": [
+        "Yes",
+        "No"
+    ],
+    "add_title": [
+        "Yes",
+        "No"
+    ],
     "post_gen_project_hook": "python3 generate_notebook.py"
 }
