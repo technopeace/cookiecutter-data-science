@@ -109,7 +109,7 @@ def create_notebook(create_notebook, notebook_name, add_title):
             "nbformat": 4,
             "nbformat_minor": 5
         }
-        with open(f'notebooks/{notebook_name}.ipynb', 'w') as f:
+        with open(f'notebooks/deneme.ipynb', 'w') as f:
             json.dump(notebook_content, f)
 
 if __name__ == "__main__":
