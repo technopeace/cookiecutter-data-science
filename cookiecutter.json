@@ -1,12 +1,34 @@
 {
-    "project_name": "My Brake Emission Project",
-    "repo_name": "default",
-    "author_name": "Your Name",
-    "open_source_license": [
-        "MIT",
-        "BSD-3-Clause",
-        "No license"
+    "project_name": "project_name",
+    "repo_name": "{{ cookiecutter.project_name.lower().replace(' ', '_') }}",
+    "module_name": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}",
+    "author_name": "Your name (or your organization/company/team)",
+    "description": "A short description of the project.",
+    "python_version_number": "3.10",
+    "dataset_storage": [
+        {"none": "none"},
+        {"azure": {"container": "container-name"}},
+        {"s3": {"bucket": "bucket-name", "aws_profile": "default"}},
+        {"gcs": {"bucket": "bucket-name"}}
     ],
+    "environment_manager": [
+        "virtualenv",
+        "conda",
+        "pipenv",
+        "none"
+    ],
+    "dependency_file": [
+        "requirements.txt",
+        "environment.yml",
+        "Pipfile"
+    ],
+    "pydata_packages": [
+        "none",
+        "basic"
+    ],
+    "open_source_license": ["No license file", "MIT", "BSD-3-Clause"],
+    "docs": ["mkdocs", "none"],
+    "include_code_scaffold": ["Yes", "No"],
     "python_interpreter": [
         "python3"
     ],
@@ -18,5 +40,5 @@
         "Yes",
         "No"
     ],
-    "post_gen_project_hook": "python generate_notebook.py"
+    "post_gen_project_hook": "python3 generate_notebook.py"
 }
