@@ -127,22 +127,31 @@ def add_source_code_to_cell(cell_source, func):
     # Kodun orijinal yorumları ile birlikte korunmasını sağla
     tokens = list(tokenize.generate_tokens(StringIO(source_code).readline))
     result_lines = []
+    previous_line = None  # Önceki satırı takip etmek için
+
     for token in tokens:
         token_type, token_string, _, _, _ = token
         if token_type == tokenize.COMMENT or token_type == tokenize.NL:  # Yorum veya boş satır
-            result_lines.append(token_string)
+            if not (previous_line == "" and token_string.strip() == ""):  # Art arda boş satırları önle
+                result_lines.append(token_string)
         elif token_type == tokenize.INDENT or token_type == tokenize.DEDENT:
             continue
         elif token_type == tokenize.NAME and token_string == "return":
             continue  # return ifadelerini atla
+        else:
+            result_lines.append(token_string)
+
+        previous_line = token_string.strip()
 
     # AST üzerinden işlenen kod bloğunu ekle
     code_block = "\n".join(ast.unparse(node) for node in function_body)
     result_lines.append(code_block)
 
-    # Sonuçları cell_source'a ekle
-    cell_source.append("\n".join(result_lines))
+    # Fazladan boşlukları kaldır ve sonuçları birleştir
+    compressed_lines = [line for line in result_lines if line.strip()]  # Sadece dolu satırları koru
+    cell_source.append("\n".join(compressed_lines))
     return cell_source
+    
 if create_notebook_var == 'Yes' or True:
     notebook_content = {
         "cells": [
