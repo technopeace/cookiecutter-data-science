@@ -98,7 +98,7 @@ if create_notebook_var == 'Yes' or True:
                 "cell_type": "markdown",
                 "metadata": {},
                 "source": [
-                    "# Brake Emission Modeling" if add_title == 'Yes' else ""
+                    "# Brake Emission Modeling {{ cookiecutter.notebook_name }}" if add_title == 'Yes' else ""
                 ]
             },
             {
