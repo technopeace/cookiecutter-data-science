@@ -120,7 +120,7 @@ def add_source_code_to_cell(cell_source, func):
   code_block = "\n".join(lines[i:-1])  # Son satırı (return) atla
 
   cell_source.append(code_block)
-  return cell_sourcee
+  return cell_source
 
 if create_notebook_var == 'Yes' or True:
     notebook_content = {
