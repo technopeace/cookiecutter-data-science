@@ -36,8 +36,5 @@
         "Yes",
         "No"
     ],
-    "file_types": [
-        "csv",
-        "yaml"
-    ]
+    "file_types": "csv, yaml"
 }
