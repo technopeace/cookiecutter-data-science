@@ -32,9 +32,5 @@
     "include_code_scaffold": ["Yes", "No"],
     "create_notebook": ["Yes", "No"],
     "notebook_name": "brake_emission_analysis",
-    "add_title": [
-        "Yes",
-        "No"
-    ],
     "file_types": "csv, yaml"
 }
