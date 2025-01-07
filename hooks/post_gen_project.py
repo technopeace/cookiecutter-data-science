@@ -112,7 +112,8 @@ def add_yaml_code(cell_source):
     
 def add_source_code_to_cell(cell_source, func):
     """Belirtilen fonksiyonun kaynak kodunu hücre kaynağına ekler."""
-    # Kaynak kodu al
+
+    # Fonksiyonun kaynak kodunu al
     source_code = inspect.getsource(func)
 
     # AST ile docstring ve return ifadelerini kaldır
@@ -123,30 +124,31 @@ def add_source_code_to_cell(cell_source, func):
     if isinstance(function_body[0], ast.Expr) and isinstance(function_body[0].value, ast.Constant):
         function_body = function_body[1:]
 
-    # Return ifadesini atla
+    # Return ifadelerini atla
     if isinstance(function_body[-1], ast.Return):
         function_body = function_body[:-1]
 
-    # AST kodunu çöz
-    ast_code_lines = ast.unparse(ast.Module(body=function_body, type_ignores=[])).splitlines()
+    # AST'den kod bloğunu oluştur
+    ast_code = ast.unparse(ast.Module(body=function_body, type_ignores=[]))
 
-    # Tokenize ile orijinal kaynak kodunu işle
+    # Yorumları korumak için tokenize işlemi
     tokens = tokenize.generate_tokens(StringIO(source_code).readline)
-    final_lines = []
-    ast_code_index = 0
+    preserved_lines = []
+    for token in tokens:
+        token_type, token_string, _, _, _ = token
+        if token_type == tokenize.COMMENT:  # Yorumları koru
+            preserved_lines.append(token_string)
+        elif token_type == tokenize.NL:  # Boş satırları ekle
+            preserved_lines.append("")
 
-    for token_type, token_string, _, _, line in tokens:
-        if token_type == tokenize.COMMENT:
-            # Yorumları doğrudan ekle
-            final_lines.append(line.strip())
-        elif token_type not in {tokenize.ENDMARKER, tokenize.NL, tokenize.INDENT, tokenize.DEDENT}:
-            # Kod kısmını AST üzerinden ekle
-            if ast_code_index < len(ast_code_lines):
-                final_lines.append(ast_code_lines[ast_code_index])
-                ast_code_index += 1
+    # Yorumları ve AST kodunu birleştir
+    combined_code = "\n".join(preserved_lines) + "\n" + ast_code
+
+    # Fazla boş satırları kaldır
+    cleaned_code = "\n".join(line for line in combined_code.splitlines() if line.strip())
 
     # Hücre kaynağına ekle
-    cell_source.extend(final_lines)
+    cell_source.append(cleaned_code)
     return cell_source
     
 if create_notebook_var == 'Yes' or True:
