@@ -105,33 +105,42 @@ def add_yaml_code(cell_source):
   return file_name, data_path
     
 def add_source_code_to_cell(cell_source, func):
-  """Belirtilen fonksiyonun kaynak kodunu hücre kaynağına ekler."""
+    """Belirtilen fonksiyonun kaynak kodunu hücre kaynağına ekler."""
 
-  source_code = inspect.getsource(func)
-  tree = ast.parse(source_code)
+    # Fonksiyonun kaynak kodunu al
+    source_code = inspect.getsource(func)
+    tree = ast.parse(source_code)
 
-  # Fonksiyon gövdesini al
-  function_body = tree.body[0].body
+    # Fonksiyon gövdesini al
+    function_body = tree.body[0].body
 
-  # Docstring'i atla
-  if isinstance(function_body[0], ast.Expr) and isinstance(function_body[0].value, ast.Constant):
-    function_body = function_body[1:]
+    # Docstring'i atla
+    if isinstance(function_body[0], ast.Expr) and isinstance(function_body[0].value, ast.Constant):
+        function_body = function_body[1:]
 
-  # Return ifadesini atla
-  if isinstance(function_body[-1], ast.Return):
-    function_body = function_body[:-1]
+    # Return ifadelerini atla
+    if isinstance(function_body[-1], ast.Return):
+        function_body = function_body[:-1]
 
-  # Kod bloğunu oluştur, tek satırlık yorumları koru
-  code_block = []
-  for node in function_body:
-    if isinstance(node, ast.Expr) and isinstance(node.value, ast.Constant) and isinstance(node.value.value, str) and node.value.value.strip().startswith("#"):
-      code_block.append(ast.unparse(node))  # Yorum satırını ekle
-    else:
-      code_block.append(ast.unparse(node))
+    # Kodun orijinal yorumları ile birlikte korunmasını sağla
+    tokens = list(tokenize.generate_tokens(StringIO(source_code).readline))
+    result_lines = []
+    for token in tokens:
+        token_type, token_string, _, _, _ = token
+        if token_type == tokenize.COMMENT or token_type == tokenize.NL:  # Yorum veya boş satır
+            result_lines.append(token_string)
+        elif token_type == tokenize.INDENT or token_type == tokenize.DEDENT:
+            continue
+        elif token_type == tokenize.NAME and token_string == "return":
+            continue  # return ifadelerini atla
 
-  cell_source.append("\n".join(code_block))
-  return cell_source
+    # AST üzerinden işlenen kod bloğunu ekle
+    code_block = "\n".join(ast.unparse(node) for node in function_body)
+    result_lines.append(code_block)
 
+    # Sonuçları cell_source'a ekle
+    cell_source.append("\n".join(result_lines))
+    return cell_source
 if create_notebook_var == 'Yes' or True:
     notebook_content = {
         "cells": [
