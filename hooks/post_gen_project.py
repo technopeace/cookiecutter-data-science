@@ -89,7 +89,20 @@ for generated_path in Path("{{ cookiecutter.module_name }}").iterdir():
 create_notebook_var = "{{ cookiecutter.create_notebook }}"
 notebook_name = "{{ cookiecutter.notebook_name }}"
 add_title = "{{ cookiecutter.add_title }}"
-print(add_title)
+file_types_var = "{{ cookiecutter.file_types }}"
+file_types_list = [x.strip() for x in file_types_var.split(",")]
+
+def add_yaml_code(cell_source):
+    """Hücre kaynağına YAML kodlarını ekler."""
+    cell_source += [
+        "# Load config files from yaml\n",
+        "cfg = yaml.safe_load(open(current_path / \"config/config.yaml\", \"r\"))\n",
+        "data_path = cfg[\"paths\"][\"data\"]\n",
+        "file_name = cfg[\"paths\"][\"file\"]\n",
+        "data_path = Path(current_path) / data_path\n",
+        "\n"
+    ]
+    return cell_source
 
 if create_notebook_var == 'Yes' or True:
     notebook_content = {
@@ -98,7 +111,7 @@ if create_notebook_var == 'Yes' or True:
                 "cell_type": "markdown",
                 "metadata": {},
                 "source": [
-                    "# Brake Emission Modeling {{ cookiecutter.notebook_name }}" if add_title == 'Yes' else ""
+                    "# {{ cookiecutter.notebook_name }} Modeling" 
                 ]
             },
             {
@@ -114,7 +127,7 @@ if create_notebook_var == 'Yes' or True:
                 "metadata": {},
                 "outputs": [],
                 "source": [
-                    "import pandas as pd\n" if add_title == 'Yes' else "",
+                    "import pandas as pd\n",
                     "from sklearn.calibration import LabelEncoder\n",
                     "import yaml\n",
                     "import os\n",
@@ -122,13 +135,15 @@ if create_notebook_var == 'Yes' or True:
                     "import numpy as np\n",
                     "\n",
                     "\n",
-                    "current_path = Path(os.getcwd())\n",
-                    "# Load config files from yaml\n",
-                    "cfg = yaml.safe_load(open(current_path / \"config/config.yaml\", \"r\"))\n",
-                    "data_path = cfg[\"paths\"][\"data\"]\n",
-                    "file_name = cfg[\"paths\"][\"file\"]\n",
-                    "data_path = Path(current_path) / data_path\n",
-                    "\n",
+                    "current_path = Path(os.getcwd())\n"
+                ]
+            },
+            {
+                "cell_type": "code",
+                "execution_count": None,
+                "metadata": {},
+                "outputs": [],
+                "source": [
                     "# Read data from CSV\n",
                     "input_data_path = data_path / r\"input_data\"\n",
                     "csv_file_path = input_data_path / (file_name + \".csv\")\n",
@@ -195,5 +210,8 @@ if create_notebook_var == 'Yes' or True:
         "nbformat": 4,
         "nbformat_minor": 5
     }
+    if "yaml" in file_types_list:
+        notebook_content["cells"][2]["source"] = add_yaml_code(notebook_content["cells"][2]["source"])
+        
     with open('C:\\Users\\u27f79\\.cookiecutters\\cookiecutter-data-science\\deneme.ipynb', 'w') as f:
         json.dump(notebook_content, f)
