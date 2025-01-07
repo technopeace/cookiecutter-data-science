@@ -125,7 +125,7 @@ def add_source_code_to_cell(cell_source, func):
         function_body = function_body[:-1]
 
     # AST'den kod bloğunu oluştur
-    ast_code = ast.unparse(ast.Module(body=function_body))
+    ast_code = ast.unparse(ast.Module(body=function_body, type_ignores=[]))
 
     # Yorumları korumak için tokenize işlemi
     tokens = tokenize.generate_tokens(StringIO(source_code).readline)
@@ -136,7 +136,7 @@ def add_source_code_to_cell(cell_source, func):
             preserved_lines.append(token_string)
         elif token_type == tokenize.NL:  # Boş satırları ekle
             preserved_lines.append("")
-    
+
     # Yorumları ve AST kodunu birleştir
     combined_code = "\n".join(preserved_lines) + "\n" + ast_code
 
