@@ -111,7 +111,7 @@ def add_source_code_to_cell(cell_source, func):
   lines = source_code.splitlines()[1:-1]  # İlk ve son satırı atla
   if lines[0].startswith('  """'):  # Docstring varsa atla
     lines = lines[1:]
-    while not lines[0].startswith('  """'):
+    while lines and not lines[0].startswith("  '''"):
       lines = lines[1:]
     lines = lines[1:]
 
