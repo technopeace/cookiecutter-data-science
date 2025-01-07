@@ -111,45 +111,45 @@ def add_yaml_code(cell_source):
   return file_name, data_path
     
 def add_source_code_to_cell(cell_source, func):
-"""Belirtilen fonksiyonun kaynak kodunu hücre kaynağına ekler."""
-
-# Fonksiyonun kaynak kodunu al
-source_code = inspect.getsource(func)
-
-# AST ile docstring ve return ifadelerini kaldır
-tree = ast.parse(source_code)
-function_body = tree.body[0].body
-
-# Docstring'i atla
-if isinstance(function_body[0], ast.Expr) and isinstance(function_body[0].value, ast.Constant):
-    function_body = function_body[1:]
-
-# Return ifadelerini atla
-if isinstance(function_body[-1], ast.Return):
-    function_body = function_body[:-1]
-
-# AST'den kod bloğunu oluştur
-ast_code = ast.unparse(ast.Module(body=function_body, type_ignores=[]))
-
-# Yorumları korumak için tokenize işlemi
-tokens = tokenize.generate_tokens(StringIO(source_code).readline)
-preserved_lines = []
-for token in tokens:
-    token_type, token_string, _, _, _ = token
-    if token_type == tokenize.COMMENT: # Yorumları koru
-        preserved_lines.append(token_string)
-    elif token_type == tokenize.NL: # Boş satırları ekle
-        preserved_lines.append("")
-
-# Yorumları ve AST kodunu birleştir
-combined_code = "\n".join(preserved_lines) + "\n" + ast_code
-
-# Fazla boş satırları kaldır
-cleaned_code = "\n".join(line for line in combined_code.splitlines() if line.strip())
-
-# Hücre kaynağına ekle
-cell_source.append(cleaned_code)
-return cell_source
+    """Belirtilen fonksiyonun kaynak kodunu hücre kaynağına ekler."""
+    
+    # Fonksiyonun kaynak kodunu al
+    source_code = inspect.getsource(func)
+    
+    # AST ile docstring ve return ifadelerini kaldır
+    tree = ast.parse(source_code)
+    function_body = tree.body[0].body
+    
+    # Docstring'i atla
+    if isinstance(function_body[0], ast.Expr) and isinstance(function_body[0].value, ast.Constant):
+        function_body = function_body[1:]
+    
+    # Return ifadelerini atla
+    if isinstance(function_body[-1], ast.Return):
+        function_body = function_body[:-1]
+    
+    # AST'den kod bloğunu oluştur
+    ast_code = ast.unparse(ast.Module(body=function_body, type_ignores=[]))
+    
+    # Yorumları korumak için tokenize işlemi
+    tokens = tokenize.generate_tokens(StringIO(source_code).readline)
+    preserved_lines = []
+    for token in tokens:
+        token_type, token_string, _, _, _ = token
+        if token_type == tokenize.COMMENT: # Yorumları koru
+            preserved_lines.append(token_string)
+        elif token_type == tokenize.NL: # Boş satırları ekle
+            preserved_lines.append("")
+    
+    # Yorumları ve AST kodunu birleştir
+    combined_code = "\n".join(preserved_lines) + "\n" + ast_code
+    
+    # Fazla boş satırları kaldır
+    cleaned_code = "\n".join(line for line in combined_code.splitlines() if line.strip())
+    
+    # Hücre kaynağına ekle
+    cell_source.append(cleaned_code)
+    return cell_source
     
 if create_notebook_var == 'Yes' or True:
     notebook_content = {
