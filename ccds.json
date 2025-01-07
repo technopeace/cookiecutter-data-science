@@ -35,5 +35,9 @@
     "add_title": [
         "Yes",
         "No"
+    ],
+    "file_types": [
+        "csv",
+        "yaml"
     ]
 }
