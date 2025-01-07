@@ -121,21 +121,15 @@ def add_source_code_to_cell(cell_source, func):
   if isinstance(function_body[-1], ast.Return):
     function_body = function_body[:-1]
 
-  # Kod bloğunu oluştur (yorum satırlarını dahil et)
-  code_block_lines = []
+  # Kod bloğunu oluştur, tek satırlık yorumları koru
+  code_block = []
   for node in function_body:
-    if isinstance(node, ast.Expr) and isinstance(node.value, ast.Constant) and isinstance(node.value.value, str) and node.value.value.startswith("#"):
-      # Yorum satırlarını doğrudan ekle
-      code_block_lines.append(ast.unparse(node)) 
+    if isinstance(node, ast.Expr) and isinstance(node.value, ast.Constant) and isinstance(node.value.value, str) and node.value.value.strip().startswith("#"):
+      code_block.append(ast.unparse(node))  # Yorum satırını ekle
     else:
-      # Diğer kod satırlarını ekle
-      code_block_lines.append(ast.unparse(node))  
+      code_block.append(ast.unparse(node))
 
-  # Kod bloğunu birleştir
-  code_block = "\n".join(code_block_lines)
-
-  cell_source.append(code_block)
-
+  cell_source.append("\n".join(code_block))
   return cell_source
 
 if create_notebook_var == 'Yes' or True:
