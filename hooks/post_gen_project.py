@@ -106,23 +106,21 @@ def add_yaml_code(cell_source):
 def add_source_code_to_cell(cell_source, func):
   """Belirtilen fonksiyonun kaynak kodunu hücre kaynağına ekler."""
   source_code = inspect.getsource(func)
+  lines = source_code.splitlines()
 
-  # Fonksiyon tanımını, docstring'i ve return satırını kaldır
-  lines = source_code.splitlines()[1:-1]  # İlk ve son satırı atla
+  # Fonksiyon tanımını ve docstring'i atla
+  i = 1  # İlk satırı (fonksiyon tanımı) atla
+  if lines[i].strip().startswith("'''"):  # Docstring varsa atla
+    i += 1
+    while not lines[i].strip().startswith("'''"):
+      i += 1
+    i += 1  # Docstring'in son satırını da atla
 
-  new_lines = []
-  in_docstring = False
-  for line in lines:
-    if line.strip().startswith("'''"):  # Docstring başlangıcı veya sonu
-      in_docstring = not in_docstring
-    elif not in_docstring:  # Docstring içinde değilse ekle
-      new_lines.append(line)
-
-  # Kod bloğunu al
-  code_block = "\n".join(new_lines)
+  # Fonksiyon gövdesini al
+  code_block = "\n".join(lines[i:-1])  # Son satırı (return) atla
 
   cell_source.append(code_block)
-  return cell_source
+  return cell_sourcee
 
 if create_notebook_var == 'Yes' or True:
     notebook_content = {
