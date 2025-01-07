@@ -111,9 +111,9 @@ def add_source_code_to_cell(cell_source, func):
 
     # Fonksiyonun kaynak kodunu al
     source_code = inspect.getsource(func)
-    tree = ast.parse(source_code)
 
-    # Fonksiyon gövdesini al
+    # AST ile docstring ve return ifadelerini kaldır
+    tree = ast.parse(source_code)
     function_body = tree.body[0].body
 
     # Docstring'i atla
@@ -124,32 +124,27 @@ def add_source_code_to_cell(cell_source, func):
     if isinstance(function_body[-1], ast.Return):
         function_body = function_body[:-1]
 
-    # Kodun orijinal yorumları ile birlikte korunmasını sağla
-    tokens = list(tokenize.generate_tokens(StringIO(source_code).readline))
-    result_lines = []
-    previous_line = None  # Önceki satırı takip etmek için
+    # AST'den kod bloğunu oluştur
+    ast_code = ast.unparse(ast.Module(body=function_body))
 
+    # Yorumları korumak için tokenize işlemi
+    tokens = tokenize.generate_tokens(StringIO(source_code).readline)
+    preserved_lines = []
     for token in tokens:
         token_type, token_string, _, _, _ = token
-        if token_type == tokenize.COMMENT or token_type == tokenize.NL:  # Yorum veya boş satır
-            if not (previous_line == "" and token_string.strip() == ""):  # Art arda boş satırları önle
-                result_lines.append(token_string)
-        elif token_type == tokenize.INDENT or token_type == tokenize.DEDENT:
-            continue
-        elif token_type == tokenize.NAME and token_string == "return":
-            continue  # return ifadelerini atla
-        else:
-            result_lines.append(token_string)
+        if token_type == tokenize.COMMENT:  # Yorumları koru
+            preserved_lines.append(token_string)
+        elif token_type == tokenize.NL:  # Boş satırları ekle
+            preserved_lines.append("")
+    
+    # Yorumları ve AST kodunu birleştir
+    combined_code = "\n".join(preserved_lines) + "\n" + ast_code
 
-        previous_line = token_string.strip()
+    # Fazla boş satırları kaldır
+    cleaned_code = "\n".join(line for line in combined_code.splitlines() if line.strip())
 
-    # AST üzerinden işlenen kod bloğunu ekle
-    code_block = "\n".join(ast.unparse(node) for node in function_body)
-    result_lines.append(code_block)
-
-    # Fazladan boşlukları kaldır ve sonuçları birleştir
-    compressed_lines = [line for line in result_lines if line.strip()]  # Sadece dolu satırları koru
-    cell_source.append("\n".join(compressed_lines))
+    # Hücre kaynağına ekle
+    cell_source.append(cleaned_code)
     return cell_source
     
 if create_notebook_var == 'Yes' or True:
