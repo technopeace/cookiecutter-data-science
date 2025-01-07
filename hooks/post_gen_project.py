@@ -93,6 +93,16 @@ file_types_var = "{{ cookiecutter.file_types }}"
 file_types_list = [x.strip() for x in file_types_var.split(",")]
 
 def add_yaml_code(cell_source):
+  """Hücre kaynağına YAML kodlarını ekler."""
+  # Load config files from yaml
+  cfg = yaml.safe_load(open(current_path / "config/config.yaml", "r"))
+  data_path = cfg["paths"]["data"]
+  file_name = cfg["paths"]["file"]
+  data_path = Path(current_path) / data_path
+
+  return file_name, data_path
+
+def add_yaml_code(cell_source):
     """Hücre kaynağına YAML kodlarını ekler."""
     cell_source += [
         "# Load config files from yaml\n",
@@ -103,6 +113,12 @@ def add_yaml_code(cell_source):
         "\n"
     ]
     return cell_source
+    
+def add_source_code_to_cell(cell_source, func):
+  """Belirtilen fonksiyonun kaynak kodunu hücre kaynağına ekler."""
+  source_code = inspect.getsource(func)
+  cell_source.append(source_code)
+  return cell_source
 
 if create_notebook_var == 'Yes' or True:
     notebook_content = {
@@ -211,7 +227,7 @@ if create_notebook_var == 'Yes' or True:
         "nbformat_minor": 5
     }
     if "yaml" in file_types_list:
-        notebook_content["cells"][2]["source"] = add_yaml_code(notebook_content["cells"][2]["source"])
+        notebook_content["cells"][2]["source"] = add_source_code_to_cell(notebook_content["cells"][2]["source"], add_yaml_code)
         
     with open('C:\\Users\\u27f79\\.cookiecutters\\cookiecutter-data-science\\deneme.ipynb', 'w') as f:
         json.dump(notebook_content, f)
