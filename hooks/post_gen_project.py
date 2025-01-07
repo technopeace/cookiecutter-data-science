@@ -96,11 +96,12 @@ add_title = "{{ cookiecutter.add_title }}"
 file_types_var = "{{ cookiecutter.file_types }}"
 file_types_list = [x.strip() for x in file_types_var.split(",")]
 
-def add_yaml_code(cell_source):
+def add_yaml_code():
   """
   Hücre kaynağına YAML kodlarını ekler.
   Korner durum eklendi
   """
+  current_path = Path(os.getcwd())
   # Load config files from yaml
   cfg = yaml.safe_load(open(current_path / "config/config.yaml", "r"))
   data_path = cfg["paths"]["data"]
@@ -181,8 +182,7 @@ if create_notebook_var == 'Yes' or True:
                     "from pathlib import Path\n",
                     "import numpy as np\n",
                     "\n",
-                    "\n",
-                    "current_path = Path(os.getcwd())\n"
+                    "\n"
                 ]
             },
             {
