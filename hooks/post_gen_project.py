@@ -97,10 +97,14 @@ file_types_var = "{{ cookiecutter.file_types }}"
 file_types_list = [x.strip() for x in file_types_var.split(",")]
 
 def add_yaml_code(cell_source):
-  """Hücre kaynağına YAML kodlarını ekler."""
+  """
+  Hücre kaynağına YAML kodlarını ekler.
+  Korner durum eklendi
+  """
   # Load config files from yaml
   cfg = yaml.safe_load(open(current_path / "config/config.yaml", "r"))
   data_path = cfg["paths"]["data"]
+  # corner case added
   file_name = cfg["paths"]["file"]
   data_path = Path(current_path) / data_path
 
