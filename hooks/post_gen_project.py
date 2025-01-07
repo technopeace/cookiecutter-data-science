@@ -124,6 +124,11 @@ def add_source_code_to_cell(cell_source, func):
   # Kod bloğunu oluştur (yorum satırlarını dahil et)
   code_block = "\n".join(ast.unparse(node) for node in function_body)
 
+  # Yorum satırlarını ekle
+  for node in function_body:
+    if isinstance(node, ast.Expr) and isinstance(node.value, ast.Constant) and isinstance(node.value.value, str) and node.value.value.startswith("#"):
+      cell_source.append(ast.unparse(node) + "\n")
+
   cell_source.append(code_block)
 
   return cell_source
