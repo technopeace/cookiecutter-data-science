@@ -112,33 +112,35 @@ def add_yaml_code(cell_source):
     
 def add_source_code_to_cell(cell_source, func):
     """Belirtilen fonksiyonun kaynak kodunu hücre kaynağına ekler."""
-    # Fonksiyonun kaynak kodunu al
+    # Kaynak kodu al
     source_code = inspect.getsource(func)
 
     # AST ile docstring ve return ifadelerini kaldır
     tree = ast.parse(source_code)
     function_body = tree.body[0].body
 
+    # Docstring'i atla
     if isinstance(function_body[0], ast.Expr) and isinstance(function_body[0].value, ast.Constant):
         function_body = function_body[1:]
 
+    # Return ifadesini atla
     if isinstance(function_body[-1], ast.Return):
         function_body = function_body[:-1]
 
     # AST kodunu çöz
     ast_code_lines = ast.unparse(ast.Module(body=function_body, type_ignores=[])).splitlines()
 
-    # Tokenize ile yorumları ve kodu sıralı şekilde işlemek
+    # Tokenize ile orijinal kaynak kodunu işle
     tokens = tokenize.generate_tokens(StringIO(source_code).readline)
     final_lines = []
     ast_code_index = 0
 
     for token_type, token_string, _, _, line in tokens:
         if token_type == tokenize.COMMENT:
-            # Yorumu doğrudan ekle
+            # Yorumları doğrudan ekle
             final_lines.append(line.strip())
-        elif token_type not in {tokenize.ENDMARKER, tokenize.NL}:
-            # Kodun sıradaki AST satırını ekle
+        elif token_type not in {tokenize.ENDMARKER, tokenize.NL, tokenize.INDENT, tokenize.DEDENT}:
+            # Kod kısmını AST üzerinden ekle
             if ast_code_index < len(ast_code_lines):
                 final_lines.append(ast_code_lines[ast_code_index])
                 ast_code_index += 1
