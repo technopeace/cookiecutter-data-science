@@ -102,23 +102,23 @@ def add_yaml_code(cell_source):
   data_path = Path(current_path) / data_path
 
   return file_name, data_path
-
-def add_yaml_code(cell_source):
-    """Hücre kaynağına YAML kodlarını ekler."""
-    cell_source += [
-        "# Load config files from yaml\n",
-        "cfg = yaml.safe_load(open(current_path / \"config/config.yaml\", \"r\"))\n",
-        "data_path = cfg[\"paths\"][\"data\"]\n",
-        "file_name = cfg[\"paths\"][\"file\"]\n",
-        "data_path = Path(current_path) / data_path\n",
-        "\n"
-    ]
-    return cell_source
     
 def add_source_code_to_cell(cell_source, func):
   """Belirtilen fonksiyonun kaynak kodunu hücre kaynağına ekler."""
   source_code = inspect.getsource(func)
-  cell_source.append(source_code)
+
+  # Fonksiyon tanımını, docstring'i ve return satırını kaldır
+  lines = source_code.splitlines()[1:-1]  # İlk ve son satırı atla
+  if lines[0].startswith('  """'):  # Docstring varsa atla
+    lines = lines[1:]
+    while not lines[0].startswith('  """'):
+      lines = lines[1:]
+    lines = lines[1:]
+
+  # Kod bloğunu al
+  code_block = "\n".join(lines)
+
+  cell_source.append(code_block)
   return cell_source
 
 if create_notebook_var == 'Yes' or True:
