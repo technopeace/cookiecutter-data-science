@@ -114,46 +114,37 @@ def add_source_code_to_cell(cell_source, func):
     """Belirtilen fonksiyonun kaynak kodunu hücre kaynağına ekler."""
     # Fonksiyonun kaynak kodunu al
     source_code = inspect.getsource(func)
-    
-    # AST ile docstring'i ve return ifadelerini kaldır
+
+    # AST ile docstring ve return ifadelerini kaldır
     tree = ast.parse(source_code)
     function_body = tree.body[0].body
 
-    # Docstring'i atla
     if isinstance(function_body[0], ast.Expr) and isinstance(function_body[0].value, ast.Constant):
         function_body = function_body[1:]
 
-    # Return ifadelerini atla
     if isinstance(function_body[-1], ast.Return):
         function_body = function_body[:-1]
 
-    # Tokenize ile yorumları ve kodu eşleştir
+    # AST kodunu çöz
+    ast_code_lines = ast.unparse(ast.Module(body=function_body, type_ignores=[])).splitlines()
+
+    # Tokenize ile yorumları ve kodu sıralı şekilde işlemek
     tokens = tokenize.generate_tokens(StringIO(source_code).readline)
-    lines = []
-    current_comment = None
+    final_lines = []
+    ast_code_index = 0
 
-    for token_type, token_string, _, _, _ in tokens:
+    for token_type, token_string, _, _, line in tokens:
         if token_type == tokenize.COMMENT:
-            current_comment = token_string  # Yorumu geçici olarak sakla
-        elif token_type == tokenize.NL and current_comment:
-            lines.append(current_comment)  # Yorumu satıra ekle
-            current_comment = None
-        elif token_type == tokenize.INDENT or token_type == tokenize.DEDENT:
-            continue  # Girintileri doğrudan atla
-        else:
-            lines.append(token_string)
-
-    # AST kodunu yeniden oluştur
-    ast_code = ast.unparse(ast.Module(body=function_body, type_ignores=[]))
-
-    # Tokenized kodu AST ile birleştir
-    final_code = "\n".join(lines) + "\n" + ast_code
-
-    # Fazla boşlukları kaldır
-    cleaned_code = "\n".join(line for line in final_code.splitlines() if line.strip())
+            # Yorumu doğrudan ekle
+            final_lines.append(line.strip())
+        elif token_type not in {tokenize.ENDMARKER, tokenize.NL}:
+            # Kodun sıradaki AST satırını ekle
+            if ast_code_index < len(ast_code_lines):
+                final_lines.append(ast_code_lines[ast_code_index])
+                ast_code_index += 1
 
     # Hücre kaynağına ekle
-    cell_source.append(cleaned_code)
+    cell_source.extend(final_lines)
     return cell_source
     
 if create_notebook_var == 'Yes' or True:
