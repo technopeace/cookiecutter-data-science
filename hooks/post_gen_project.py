@@ -5,6 +5,7 @@ import json
 from copy import copy
 from pathlib import Path
 import inspect
+import ast
 
 # https://github.com/cookiecutter/cookiecutter/issues/824
 #   our workaround is to include these utility functions in the CCDS package
@@ -105,19 +106,23 @@ def add_yaml_code(cell_source):
     
 def add_source_code_to_cell(cell_source, func):
   """Belirtilen fonksiyonun kaynak kodunu hücre kaynağına ekler."""
-  source_code = inspect.getsource(func)
-  lines = source_code.splitlines()
 
-  # Fonksiyon tanımını ve docstring'i atla
-  i = 1  # İlk satırı (fonksiyon tanımı) atla
-  if lines[i].strip().startswith("'''"):  # Docstring varsa atla
-    i += 1
-    while not lines[i].strip().startswith("'''"):
-      i += 1
-    i += 1  # Docstring'in son satırını da atla
+  source_code = inspect.getsource(func)
+  tree = ast.parse(source_code)
 
   # Fonksiyon gövdesini al
-  code_block = "\n".join(lines[i:-1])  # Son satırı (return) atla
+  function_body = tree.body[0].body
+
+  # Docstring'i atla
+  if isinstance(function_body[0], ast.Expr) and isinstance(function_body[0].value, ast.Constant):
+    function_body = function_body[1:]
+
+  # Return ifadesini atla
+  if isinstance(function_body[-1], ast.Return):
+    function_body = function_body[:-1]
+
+  # Kod bloğunu oluştur
+  code_block = "\n".join(ast.unparse(node) for node in function_body)
 
   cell_source.append(code_block)
   return cell_source
