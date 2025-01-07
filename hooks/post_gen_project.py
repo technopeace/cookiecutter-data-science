@@ -4,6 +4,7 @@ import sys
 import json
 from copy import copy
 from pathlib import Path
+import inspect
 
 # https://github.com/cookiecutter/cookiecutter/issues/824
 #   our workaround is to include these utility functions in the CCDS package
