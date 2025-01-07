@@ -121,10 +121,11 @@ def add_source_code_to_cell(cell_source, func):
   if isinstance(function_body[-1], ast.Return):
     function_body = function_body[:-1]
 
-  # Kod bloğunu oluştur
+  # Kod bloğunu oluştur (yorum satırlarını dahil et)
   code_block = "\n".join(ast.unparse(node) for node in function_body)
 
   cell_source.append(code_block)
+
   return cell_source
 
 if create_notebook_var == 'Yes' or True:
