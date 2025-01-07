@@ -109,14 +109,17 @@ def add_source_code_to_cell(cell_source, func):
 
   # Fonksiyon tanımını, docstring'i ve return satırını kaldır
   lines = source_code.splitlines()[1:-1]  # İlk ve son satırı atla
-  if lines[0].startswith('  """'):  # Docstring varsa atla
-    lines = lines[1:]
-    #while lines and not lines[0].startswith("  '''"):
-      #lines = lines[1:]
-    lines = lines[1:]
+
+  new_lines = []
+  in_docstring = False
+  for line in lines:
+    if line.strip().startswith("'''"):  # Docstring başlangıcı veya sonu
+      in_docstring = not in_docstring
+    elif not in_docstring:  # Docstring içinde değilse ekle
+      new_lines.append(line)
 
   # Kod bloğunu al
-  code_block = "\n".join(lines)
+  code_block = "\n".join(new_lines)
 
   cell_source.append(code_block)
   return cell_source
