@@ -111,39 +111,45 @@ def add_yaml_code(cell_source):
   return file_name, data_path
     
 def add_source_code_to_cell(cell_source, func):
-  """Belirtilen fonksiyonun kaynak kodunu hücre kaynağına ekler."""
+"""Belirtilen fonksiyonun kaynak kodunu hücre kaynağına ekler."""
 
-  source_code = inspect.getsource(func)
-  tree = ast.parse(source_code)
+# Fonksiyonun kaynak kodunu al
+source_code = inspect.getsource(func)
 
-  # Fonksiyon gövdesini al
-  function_body = tree.body[0].body
+# AST ile docstring ve return ifadelerini kaldır
+tree = ast.parse(source_code)
+function_body = tree.body[0].body
 
-  # Docstring'i atla
-  if isinstance(function_body[0], ast.Expr) and isinstance(function_body[0].value, ast.Constant):
+# Docstring'i atla
+if isinstance(function_body[0], ast.Expr) and isinstance(function_body[0].value, ast.Constant):
     function_body = function_body[1:]
 
-  # Return ifadesini atla
-  if isinstance(function_body[-1], ast.Return):
+# Return ifadelerini atla
+if isinstance(function_body[-1], ast.Return):
     function_body = function_body[:-1]
 
-  # Kod bloğunu oluştur, yorum satırlarını koru ve sıralarını bozma
-  code_block = []
-  for i, node in enumerate(function_body):
-    if isinstance(node, ast.Expr) and isinstance(node.value, ast.Constant) and isinstance(node.value.value, str) and node.value.value.strip().startswith("#"):
-      # Yorum satırını ekle
-      code_block.append(ast.unparse(node))
-    else:
-      # Yorum satırından önceki kodları ekle
-      code_block.extend(ast.unparse(prev_node) for prev_node in function_body[:i] if not (isinstance(prev_node, ast.Expr) and isinstance(prev_node.value, ast.Constant) and isinstance(prev_node.value.value, str) and prev_node.value.value.strip().startswith("#")))
-      # Şimdiki kod satırını ekle
-      code_block.append(ast.unparse(node))
-      # Yorum satırından sonraki kodları ekle
-      code_block.extend(ast.unparse(next_node) for next_node in function_body[i+1:] if not (isinstance(next_node, ast.Expr) and isinstance(next_node.value, ast.Constant) and isinstance(next_node.value.value, str) and next_node.value.value.strip().startswith("#")))
-      break  # Diğer kodları ekledik, döngüyü kır
+# AST'den kod bloğunu oluştur
+ast_code = ast.unparse(ast.Module(body=function_body, type_ignores=[]))
 
-  cell_source.append("\n".join(code_block))
-  return cell_source
+# Yorumları korumak için tokenize işlemi
+tokens = tokenize.generate_tokens(StringIO(source_code).readline)
+preserved_lines = []
+for token in tokens:
+    token_type, token_string, _, _, _ = token
+    if token_type == tokenize.COMMENT: # Yorumları koru
+        preserved_lines.append(token_string)
+    elif token_type == tokenize.NL: # Boş satırları ekle
+        preserved_lines.append("")
+
+# Yorumları ve AST kodunu birleştir
+combined_code = "\n".join(preserved_lines) + "\n" + ast_code
+
+# Fazla boş satırları kaldır
+cleaned_code = "\n".join(line for line in combined_code.splitlines() if line.strip())
+
+# Hücre kaynağına ekle
+cell_source.append(cleaned_code)
+return cell_source
     
 if create_notebook_var == 'Yes' or True:
     notebook_content = {
