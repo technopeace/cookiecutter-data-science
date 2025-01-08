@@ -93,6 +93,10 @@ for generated_path in Path("{{ cookiecutter.module_name }}").iterdir():
 create_notebook_var = "{{ cookiecutter.create_notebook }}"
 notebook_name = "{{ cookiecutter.notebook_name }}"
 use_yaml_parameters = "{{ cookiecutter.use_yaml_parameters }}"
+try:
+    use_yaml_parameters = json.loads(use_yaml_parameters)
+except json.JSONDecodeError as e:
+    print(f"Error decoding JSON string: {e}")
 file_types_var = "{{ cookiecutter.file_types }}"
 if list(use_yaml_parameters.keys())[0] == 'Yes':
     yaml_path = use_yaml_parameters['Yes']['yaml_path']
