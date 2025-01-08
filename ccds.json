@@ -33,9 +33,9 @@
     "create_notebook": ["Yes", "No"],
     "notebook_name": "brake_emission_analysis",
     "use_yaml_parameters": ["Yes", "No"],
-    {% if cookiecutter.use_yaml_parameters == 'Yes' %}
+    {% if cookiecutter.use_yaml_parameters == 'Yes' %},
     "yaml_path": "config/config.yaml",
-    {% endif %}
+    {% endif %},
     "input_data_path": "config/config.yaml",
     "file_name": "data",
     "read_file_types": "csv, mdf"
