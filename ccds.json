@@ -38,5 +38,15 @@
         "default": "config/config.yaml",
         "message": "YAML dosyanızın yolu nedir?"
     },
+    "input_data_path": {
+        "when": "{{ cookiecutter.use_yaml_parameters == 'No' }}",
+        "default": "data/input/",
+        "message": "Input Data Path?"
+    },
+    "file_name": {
+        "when": "{{ cookiecutter.use_yaml_parameters == 'No' }}",
+        "default": "data",
+        "message": "Data file name?"
+    },
     "read_file_types": "csv, mdf"
 }
