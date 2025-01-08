@@ -103,7 +103,7 @@ if list(use_yaml_parameters.keys())[0] == 'Yes':
     yaml_path = use_yaml_parameters['Yes']['yaml_path']
     print(yaml_path)
 else:
-    input_data_path = use_yaml_parameters['Yes']['input_data_path']"
+    input_data_path = use_yaml_parameters['Yes']['input_data_path']
     file_name = use_yaml_parameters['Yes']['file_name']
     print(input_data_path)
     print(file_name)
