@@ -105,7 +105,7 @@ print(create_notebook_var)
 print(notebook_name)
 print(add_title)
 print(use_yaml_parameters)
-print(yaml_path)
+#print(yaml_path)
 print(file_types_list)
 
 def add_yaml_code():
