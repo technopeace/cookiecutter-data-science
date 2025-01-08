@@ -32,9 +32,12 @@
     "include_code_scaffold": ["Yes", "No"],
     "create_notebook": ["Yes", "No"],
     "notebook_name": "brake_emission_analysis",
-    "use_yaml_parameters": ["Yes", "No"],
-    "yaml_path": "config/config.yaml",
-    "input_data_path": "config/config.yaml",
-    "file_name": "data",
+    "use_yaml_parameters": [
+        {"Yes": {"yaml_path_advice": "config/config.yaml", "input_data_path_advice": "invalidated, just press enter"}, "file_name_advice": "invalidated, just press enter/"},
+        {"No": {"yaml_path_advice": "invalidated, just press enter", "input_data_path_advice": "data/input/"}, "file_name_advice": "data"}
+    ],
+    "yaml_path": "{{ cookiecutter.yaml_path_advace }}",
+    "input_data_path": "{{ cookiecutter.input_data_path_advice }}",
+    "file_name": "{{ cookiecutter.file_name_advice }}",
     "read_file_types": "csv, mdf"
 }
