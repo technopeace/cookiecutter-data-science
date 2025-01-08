@@ -92,20 +92,19 @@ for generated_path in Path("{{ cookiecutter.module_name }}").iterdir():
 # Extract values from the context
 create_notebook_var = "{{ cookiecutter.create_notebook }}"
 notebook_name = "{{ cookiecutter.notebook_name }}"
-add_title = "{{ cookiecutter.add_title }}"
 use_yaml_parameters = "{{ cookiecutter.use_yaml_parameters }}"
 file_types_var = "{{ cookiecutter.file_types }}"
-if use_yaml_parameters == 'Yes':
-    yaml_path = "{{ cookiecutter.yaml_path }}"
+if list(use_yaml_parameters.keys())[0] == 'Yes':
+    yaml_path = use_yaml_parameters['Yes']['yaml_path']
 else:
     input_data_path = "{{ cookiecutter.input_data_path }}"
     file_name = "{{ cookiecutter.file_name }}"
+use_yaml_parameters = list(use_yaml_parameters.keys())[0] == 'Yes'
 file_types_list = [x.strip() for x in file_types_var.split(",")]
 print(create_notebook_var)
 print(notebook_name)
-print(add_title)
 print(use_yaml_parameters)
-#print(yaml_path)
+print(yaml_path)
 print(file_types_list)
 
 def add_yaml_code():
