@@ -93,6 +93,7 @@ for generated_path in Path("{{ cookiecutter.module_name }}").iterdir():
 create_notebook_var = "{{ cookiecutter.create_notebook }}"
 notebook_name = "{{ cookiecutter.notebook_name }}"
 use_yaml_parameters = "{{ cookiecutter.use_yaml_parameters }}"
+use_yaml_parameters = use_yaml_parameters.replace("'", '"')
 try:
     use_yaml_parameters = json.loads(use_yaml_parameters)
 except json.JSONDecodeError as e:
