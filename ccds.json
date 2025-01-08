@@ -33,13 +33,16 @@
     "create_notebook": ["Yes", "No"],
     "notebook_name": "brake_emission_analysis",
     "use_yaml_parameters": ["Yes", "No"],
-    "_conditions": {
-        "yaml_path": "{{ cookiecutter.use_yaml_parameters == 'Yes' }}",
-        "input_data_path": "{{ cookiecutter.use_yaml_parameters == 'No' }}",
-        "file_name": "{{ cookiecutter.use_yaml_parameters == 'No' }}"
+    "yaml_path": {
+        "default": "config/config.yaml",
+        "message": "Specify the YAML file path",
+        "_conditions": "{{ cookiecutter.use_yaml_parameters == 'Yes' }}"
     },
-    "yaml_path": "config/config.yaml",
-    "input_data_path": "data/input/",
+    "input_data_path": {
+        "default": "config/config.yaml",
+        "message": "Specify the YAML file path",
+        "_conditions": "{{ cookiecutter.use_yaml_parameters == 'No' }}"
+    },
     "file_name": "data",
     "read_file_types": "csv, mdf"
 }
