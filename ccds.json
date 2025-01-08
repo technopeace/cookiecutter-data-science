@@ -33,8 +33,8 @@
     "create_notebook": ["Yes", "No"],
     "notebook_name": "brake_emission_analysis",
     "use_yaml_parameters": [
-        {"Yes": {"yaml_path": "config/config.yaml", "input_data_path": "invalidated, just press enter"}, "file_name": "invalidated, just press enter/"},
-        {"No": {"yaml_path": "invalidated, just press enter", "input_data_path": "data/input/"}, "file_name": "data"}
+        {"Yes": {"yaml_path": "config/config.yaml", "input_data_path": "invalidated, just press enter", "file_name": "invalidated, just press enter/"},
+        {"No": {"yaml_path": "invalidated, just press enter", "input_data_path": "data/input/", "file_name": "data"}
     ],
     "read_file_types": "csv, mdf"
 }
