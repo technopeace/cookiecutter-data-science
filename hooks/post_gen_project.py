@@ -93,23 +93,33 @@ for generated_path in Path("{{ cookiecutter.module_name }}").iterdir():
 create_notebook_var = "{{ cookiecutter.create_notebook }}"
 notebook_name = "{{ cookiecutter.notebook_name }}"
 add_title = "{{ cookiecutter.add_title }}"
+use_yaml_parameters = "{{ cookiecutter.use_yaml_parameters }}"
 file_types_var = "{{ cookiecutter.file_types }}"
+if use_yaml_parameters == 'Yes':
+    yaml_path = "{{ cookiecutter.yaml_path }}"
 file_types_list = [x.strip() for x in file_types_var.split(",")]
 
 def add_yaml_code():
-  """
-  Hücre kaynağına YAML kodlarını ekler.
-  Korner durum eklendi
-  """
-  current_path = Path(os.getcwd())
-  # Load config files from yaml
-  cfg = yaml.safe_load(open(current_path / "config/config.yaml", "r"))
-  data_path = cfg["paths"]["data"]
-  # corner case added
-  file_name = cfg["paths"]["file"]
-  data_path = Path(current_path) / data_path
+    """
+    Hücre kaynağına YAML kodlarını ekler.
+    Korner durum eklendi
+    """
+    current_path = Path(os.getcwd())
+    # Load config files from yaml
+    cfg = yaml.safe_load(open(current_path / yaml_path, "r"))
+    data_path = cfg["paths"]["data"]
+    # corner case added
+    file_name = cfg["paths"]["file"]
+    data_path = Path(current_path) / data_path
+    input_data_path = data_path / r"input_data"
+    
+    return file_name, data_path, cfg, input_data_path
 
-  return file_name, data_path
+def read_from_CSV(input_data_path, file_name):
+    # Read data from CSV                
+    csv_file_path = input_data_path / (file_name + ".csv")
+    df = pd.read_csv(csv_file_path, header=0, na_values=["---", "Unknown"])
+    return csv_file_path, df
     
 def add_source_code_to_cell(cell_source, func):
     """Belirtilen fonksiyonun kaynak kodunu hücre kaynağına ekler."""
@@ -191,10 +201,6 @@ if create_notebook_var == 'Yes' or True:
                 "metadata": {},
                 "outputs": [],
                 "source": [
-                    "# Read data from CSV\n",
-                    "input_data_path = data_path / r\"input_data\"\n",
-                    "csv_file_path = input_data_path / (file_name + \".csv\")\n",
-                    "df = pd.read_csv(csv_file_path, header=0, na_values=[\"---\", \"Unknown\"])\n",
                     "\n",
                     "# Function to clean column names\n",
                     "def clean_column_name(column_name):\n",
@@ -257,8 +263,12 @@ if create_notebook_var == 'Yes' or True:
         "nbformat": 4,
         "nbformat_minor": 5
     }
-    if "yaml" in file_types_list:
+    
+    if use_yaml_parameters == 'Yes':
         notebook_content["cells"][2]["source"] = add_source_code_to_cell(notebook_content["cells"][2]["source"], add_yaml_code)
+
+    if "csv" in file_types_list:
+        notebook_content["cells"][2]["source"] = add_source_code_to_cell(notebook_content["cells"][2]["source"], read_from_CSV)
         
     with open('C:\\Users\\u27f79\\.cookiecutters\\cookiecutter-data-science\\deneme.ipynb', 'w') as f:
         json.dump(notebook_content, f)
