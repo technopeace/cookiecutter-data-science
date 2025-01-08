@@ -98,7 +98,7 @@ try:
     use_yaml_parameters = json.loads(use_yaml_parameters)
 except json.JSONDecodeError as e:
     print(f"Error decoding JSON string: {e}")
-file_types_var = "{{ cookiecutter.file_types }}"
+file_types_var = "{{ cookiecutter.read_file_types }}"
 if list(use_yaml_parameters.keys())[0] == 'Yes':
     yaml_path = use_yaml_parameters['Yes']['yaml_path']
 else:
