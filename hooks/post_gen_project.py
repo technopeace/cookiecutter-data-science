@@ -97,6 +97,9 @@ use_yaml_parameters = "{{ cookiecutter.use_yaml_parameters }}"
 file_types_var = "{{ cookiecutter.file_types }}"
 if use_yaml_parameters == 'Yes':
     yaml_path = "{{ cookiecutter.yaml_path }}"
+else:
+    input_data_path = "{{ cookiecutter.input_data_path }}"
+    file_name = "{{ cookiecutter.file_name }}"
 file_types_list = [x.strip() for x in file_types_var.split(",")]
 
 def add_yaml_code():
@@ -192,6 +195,8 @@ if create_notebook_var == 'Yes' or True:
                     "from pathlib import Path\n",
                     "import numpy as np\n",
                     "\n",
+                    f"input_data_path = {input_data_path}\n" if use_yaml_parameters == 'No' else "",
+                    f"file_name = {file_name}\n" if use_yaml_parameters == 'No' else "",
                     "\n"
                 ]
             },
