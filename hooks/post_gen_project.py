@@ -101,6 +101,12 @@ else:
     input_data_path = "{{ cookiecutter.input_data_path }}"
     file_name = "{{ cookiecutter.file_name }}"
 file_types_list = [x.strip() for x in file_types_var.split(",")]
+print(create_notebook_var)
+print(notebook_name)
+print(add_title)
+print(use_yaml_parameters)
+print(yaml_path)
+print(file_types_list)
 
 def add_yaml_code():
     """
