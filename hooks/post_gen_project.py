@@ -205,9 +205,9 @@ if create_notebook_var == 'Yes' or True:
                     "from pathlib import Path\n",
                     "import numpy as np\n",
                     "\n",
-                    f"input_data_path = {input_data_path}\n" if use_yaml_parameters == 'No' else "",
-                    f"file_name = {file_name}\n" if use_yaml_parameters == 'No' else "",
-                    f"yaml_path = {yaml_path}\n" if use_yaml_parameters == 'Yes' else "",
+                    f"input_data_path = '{input_data_path}'\n" if use_yaml_parameters == 'No' else "",
+                    f"file_name = '{file_name}'\n" if use_yaml_parameters == 'No' else "",
+                    f"yaml_path = '{yaml_path}'\n" if use_yaml_parameters == 'Yes' else "",
                     "\n"
                 ]
             },
