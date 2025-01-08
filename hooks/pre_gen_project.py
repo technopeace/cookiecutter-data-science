@@ -6,7 +6,7 @@ def main():
     use_yaml_parameters = "{{ cookiecutter.use_yaml_parameters }}"
     
     # Eğer 'No' seçilmişse, kullanıcıya YAML yolu sormayı atla
-    if use_yaml_parameters.lower() == "no":
+    if use_yaml_parameters.lower() != "Yes":
         sys.stdout.write("Skipping YAML path as 'use_yaml_parameters' is 'No'.\n")
         # Burada, `yaml_path` boş bir değerle geçersiz kılınabilir.
         cookiecutter_context = {
