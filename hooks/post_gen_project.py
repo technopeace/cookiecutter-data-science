@@ -104,7 +104,7 @@ if list(use_yaml_parameters.keys())[0] == 'Yes':
 else:
     input_data_path = "{{ cookiecutter.input_data_path }}"
     file_name = "{{ cookiecutter.file_name }}"
-use_yaml_parameters = list(use_yaml_parameters.keys())[0] == 'Yes'
+use_yaml_parameters = list(use_yaml_parameters.keys())[0]
 file_types_list = [x.strip() for x in file_types_var.split(",")]
 print(create_notebook_var)
 print(notebook_name)
