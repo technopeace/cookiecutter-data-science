@@ -32,5 +32,11 @@
     "include_code_scaffold": ["Yes", "No"],
     "create_notebook": ["Yes", "No"],
     "notebook_name": "brake_emission_analysis",
-    "file_types": "csv, yaml"
+    "use_yaml_parameters": ["Yes", "No"],
+    "yaml_path": {
+        "when": "{{ cookiecutter.use_yaml_parameters == 'Yes' }}",
+        "default": "config/config.yaml",
+        "message": "YAML dosyanızın yolu nedir?"
+    }
+    "read_file_types": "csv, mdf"
 }
