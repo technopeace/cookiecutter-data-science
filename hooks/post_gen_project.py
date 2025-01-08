@@ -105,6 +105,8 @@ if list(use_yaml_parameters.keys())[0] == 'Yes':
 else:
     input_data_path = use_yaml_parameters['No']['input_data_path']
     file_name = use_yaml_parameters['No']['file_name']
+    hard_coded_input_data_path = input_data_path 
+    hard_coded_file_name = file_name
     print(input_data_path)
     print(file_name)
 use_yaml_parameters = list(use_yaml_parameters.keys())[0]
@@ -207,8 +209,8 @@ if create_notebook_var == 'Yes' or True:
                     "from pathlib import Path\n",
                     "import numpy as np\n",
                     "\n",
-                    f"input_data_path = '{input_data_path}'\n" if use_yaml_parameters == 'No' else "",
-                    f"file_name = '{file_name}'\n" if use_yaml_parameters == 'No' else "",
+                    f"input_data_path = '{hard_coded_input_data_path}'\n" if use_yaml_parameters == 'No' else "",
+                    f"file_name = '{hard_coded_file_name}'\n" if use_yaml_parameters == 'No' else "",
                     f"yaml_path = '{yaml_path}'\n" if use_yaml_parameters == 'Yes' else "",
                     "\n"
                 ]
