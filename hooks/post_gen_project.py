@@ -118,8 +118,8 @@ try:
     remove_strange_chars_from_column = json.loads(remove_strange_chars_from_column)
 except json.JSONDecodeError as e:
     print(f"Error decoding JSON string: {e}")
-remove_strange_chars_from_column = list(remove_strange_chars_from_column.keys())[0]
 strange_chars_var = remove_strange_chars_from_column['Yes']['strange_chars']
+remove_strange_chars_from_column = list(remove_strange_chars_from_column.keys())[0]
 
 file_types_list = [x.strip() for x in file_types_var.split(",")]
 replace_chars = [x.strip() for x in strange_chars_var.split(",")]
