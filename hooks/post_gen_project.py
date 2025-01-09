@@ -106,24 +106,28 @@ def extractDataFromCookieCutter(parameter, yes_parameter_name="", no_parameter_n
     return parameter, yes_parameter_var, no_parameter_var
 
 def extractDataFromCookieCutter_test(parameter, ccds):
+    """
+    CookieCutter parametresini ayrıştırır ve verilen ccds verisine göre değerleri döndürür.
+
+    Args:
+      parameter: CookieCutter parametre string'i.
+      ccds: ccds.json dosyasının içeriği (sözlük olarak).
+
+    Returns:
+      parameter: Ayrıştırılmış parametre.
+      parameter_values: Parametre değerlerini içeren sözlük.
+    """
 
     parameter_names = {}
     for key, value in ccds.items():
         if isinstance(value, list) and all(isinstance(item, dict) for item in value):
+            # 'Yes' ve 'No' durumlarını içeren listeleri tespit et
             conditions = list(value[0].keys())
             if "Yes" in conditions and "No" in conditions:
                 parameter_names[key] = {
-                    "Yes": [],
-                    "No": []
+                    "Yes": list(value[0]["Yes"].keys()),
+                    "No": list(value[1]["No"].keys())
                 }
-                for item in value:
-                    for condition, inner_dict in item.items():
-                        if isinstance(inner_dict, dict):
-                            parameter_names[key][condition].extend(list(inner_dict.keys()))
-                        elif isinstance(inner_dict, list):
-                            for inner_item in inner_dict:
-                                for inner_condition, inner_inner_dict in inner_item.items():
-                                    parameter_names[key][condition].extend(list(inner_inner_dict.keys()))
 
     parameter_str = parameter.replace("'", '"')
     try:
@@ -135,15 +139,17 @@ def extractDataFromCookieCutter_test(parameter, ccds):
     parameter_values = {}
     for condition, names in parameter_names.get(list(parameter_json.keys())[0], {}).items():
         for name in names:
-            value = parameter_json.get(condition, {}).get(name, None)
+            # İç içe geçmiş sözlük yapılarını ele alıyoruz
+            if condition == 'Yes':
+                value = parameter_json.get(condition, {}).get(name, None)
+            else:  # condition == 'No'
+                no_dict = parameter_json.get(condition, {})
+                if isinstance(no_dict, list):
+                    no_dict = no_dict[0]  # 'No' durumu için listedeki ilk sözlüğü alıyoruz
+                value = no_dict.get(name, None)
+
             if value is None:
-                if isinstance(parameter_json.get(condition), list):
-                    for item in parameter_json.get(condition):
-                        value = item.get(condition, {}).get(name, None)
-                        if value:
-                            break
-                if value is None:
-                    print(f"Warning: '{condition}' key or '{name}' not found in parameter.")
+                print(f"Warning: '{condition}' key or '{name}' not found in parameter.")
             parameter_values[name] = value
 
     return list(parameter_json.keys())[0], parameter_values
