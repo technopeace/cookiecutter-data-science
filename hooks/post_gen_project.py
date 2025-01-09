@@ -88,7 +88,7 @@ for generated_path in Path("{{ cookiecutter.module_name }}").iterdir():
         generated_path.write_text("")
 # {% endif %}
 
-def extractDataFromCookieCutter(parameter, yes_parameter_name="", no_parameter_name=""):
+def extractDataFromCookieCutter_test(parameter, yes_parameter_name="", no_parameter_name=""):
     parameter = parameter.replace("'", '"')
     try:
         parameter = json.loads(parameter)
@@ -103,6 +103,56 @@ def extractDataFromCookieCutter(parameter, yes_parameter_name="", no_parameter_n
     if no_parameter_var is None:
         print(f"Warning: 'No' key or '{no_parameter_name}' not found in parameter.")
     return parameter, yes_parameter_var, no_parameter_var
+
+def extractDataFromCookieCutter(parameter, ccds):
+    """
+    CookieCutter parametresini ayrıştırır ve verilen ccds verisine göre değerleri döndürür.
+
+    Args:
+      parameter: CookieCutter parametre string'i.
+      ccds: ccds.json dosyasının içeriği (sözlük olarak).
+
+    Returns:
+      parameter: Ayrıştırılmış parametre.
+      parameter_values: Parametre değerlerini içeren sözlük.
+    """
+
+    parameter_names = {}
+    for key, value in ccds.items():
+        if isinstance(value, list) and all(isinstance(item, dict) for item in value):
+            # 'Yes' ve 'No' durumlarını içeren listeleri tespit et
+            conditions = list(value[0].keys())
+            if "Yes" in conditions and "No" in conditions:
+                parameter_names[key] = {
+                    "Yes": list(value[0]["Yes"].keys()),
+                    "No": list(value[1]["No"].keys())
+                }
+
+    parameter_str = parameter.replace("'", '"')
+    try:
+        parameter_json = json.loads(parameter_str)
+    except json.JSONDecodeError as e:
+        print(f"Error decoding JSON string: {e}")
+        return None, None
+
+    parameter_values = {}
+    for condition, names in parameter_names.get(list(parameter_json.keys())[0], {}).items():
+        for name in names:
+            value = parameter_json.get(condition, {}).get(name, None)
+            if value is None:
+                print(f"Warning: '{condition}' key or '{name}' not found in parameter.")
+            parameter_values[name] = value
+
+    return list(parameter_json.keys())[0], parameter_values
+
+# Kullanım örneği:
+use_yaml_parameters, values = extractDataFromCookieCutter_test("{{ cookiecutter.use_yaml_parameters }}", {{ cookiecutter }})
+
+yaml_path = values.get("yaml_path")
+input_data_path = values.get("input_data_path")
+file_name = values.get("file_name")
+
+print("RESULTS: ", use_yaml_parameters, yaml_path, input_data_path, file_name)
 
 
 # Extract values from the context
