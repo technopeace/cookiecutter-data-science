@@ -243,7 +243,7 @@ if create_notebook_var == 'Yes':
                     f"input_data_path = '{hard_coded_input_data_path}'\n" if use_yaml_parameters == 'No' else "",
                     f"file_name = '{hard_coded_file_name}'\n" if use_yaml_parameters == 'No' else "",
                     f"yaml_path = '{yaml_path}'\n" if use_yaml_parameters == 'Yes' else "",
-                    f"replace_chars = {strange_chars_var}\n" if remove_strange_chars_from_column == 'Yes' else "",
+                    f"replace_chars = {replace_chars}\n" if remove_strange_chars_from_column == 'Yes' else "",
                     "\n"
                 ]
             },
