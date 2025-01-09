@@ -105,40 +105,31 @@ def extractDataFromCookieCutter(parameter, yes_parameter_name="", no_parameter_n
         print(f"Warning: 'No' key or '{no_parameter_name}' not found in parameter.")
     return parameter, yes_parameter_var, no_parameter_var
 
-def process_nested_keys(target_data, target_key):
-    def recursive_extract(key, value, prefix=""):
-        """
-        Recursive function to extract and process nested keys.
+def process_nested_keys(parameter, prefix=""):
+    """
+    JSON içindeki her bir anahtar ve alt anahtarın değerlerini derinlemesine işleyerek yazdırır.
 
-        Args:
-            key (str): Current key being processed.
-            value: Current value associated with the key.
-            prefix (str): Prefix for nested keys for better readability.
+    Args:
+        parameter (dict or list or str): JSON verisi
+        prefix (str): Anahtarın başına eklenecek yol bilgisi
 
-        Returns:
-            list: Processed results for the current level.
-        """
-        results = []
-        current_prefix = f"{prefix}{key}"
-
-        if isinstance(value, dict):
-            for sub_key, sub_value in value.items():
-                results.extend(recursive_extract(sub_key, sub_value, prefix=f"{current_prefix}."))
-        elif isinstance(value, list):
-            for idx, item in enumerate(value):
-                if isinstance(item, dict):
-                    results.extend(recursive_extract(f"[{idx}]", item, prefix=f"{current_prefix}"))
-                else:
-                    results.append((f"{current_prefix}[{idx}]", item))
-        else:
-            results.append((current_prefix, value))
-
-        return results
-    cookiecutter_data = (target_key, target_data)
-    return recursive_extract(target_key, cookiecutter_data)
+    Returns:
+        None
+    """
+    if isinstance(parameter, dict):
+        for key, value in parameter.items():
+            new_prefix = f"{prefix}.{key}" if prefix else key
+            process_nested_keys(value, new_prefix)
+    elif isinstance(parameter, list):
+        for idx, item in enumerate(parameter):
+            new_prefix = f"{prefix}[{idx}]"
+            process_nested_keys(item, new_prefix)
+    else:
+        print(f"{prefix}: {parameter}")
 
 # Process the use_yaml_parameters key
-result = process_nested_keys("{{ cookiecutter.use_yaml_parameters }}", "use_yaml_parameters ")
+cookiecutter_data = "{{ cookiecutter.use_yaml_parameters }}"
+result = process_nested_keys(cookiecutter_data['use_yaml_parameters'])
 
 # Print results
 for key, value in result:
