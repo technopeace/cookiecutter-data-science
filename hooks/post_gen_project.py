@@ -134,13 +134,34 @@ def process_nested_keys(value, key, prefix=""):
 
     return results
 
+def process_nested_keys(parameter, prefix=""):
+    """
+    JSON içindeki her bir anahtar ve alt anahtarın değerlerini derinlemesine işleyerek yazdırır.
+
+    Args:
+        parameter (dict or list or str): JSON verisi
+        prefix (str): Anahtarın başına eklenecek yol bilgisi
+
+    Returns:
+        None
+    """
+    if isinstance(parameter, dict):
+        for key, value in parameter.items():
+            new_prefix = f"{prefix}.{key}" if prefix else key
+            process_nested_keys(value, new_prefix)
+    elif isinstance(parameter, list):
+        for idx, item in enumerate(parameter):
+            new_prefix = f"{prefix}[{idx}]"
+            process_nested_keys(item, new_prefix)
+    else:
+        print(f"{prefix}: {parameter}")
 
 # Process the use_yaml_parameters key
 result = process_nested_keys("{{ cookiecutter.use_yaml_parameters }}", 'use_yaml_parameters')
 
 # Print results
 for key, value in result:
-    print(f"{key}: {value}")
+    process_nested_keys(value)
     
 # Extract values from the context
 create_notebook_var = "{{ cookiecutter.create_notebook }}"
