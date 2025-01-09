@@ -118,6 +118,8 @@ print(create_notebook_var)
 print(notebook_name)
 print(use_yaml_parameters)
 print(file_types_list)
+print(remove_strange_chars_from_column)
+print(replace_chars)
 
 def add_yaml_code():
     """
