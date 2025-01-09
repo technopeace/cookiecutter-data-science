@@ -32,7 +32,8 @@
     "include_code_scaffold": ["Yes", "No"],
     "create_notebook": ["Yes", "No"],
     "remove_strange_chars_from_column ": [
-        {"Yes": {"strange_chars": "[, ], ?, /,  "}}  
+        {"Yes": {"strange_chars": "[, ], ?, /,  "}} ,
+        {"No": {}}
     ],
     "notebook_name": "brake_emission_analysis",
     "use_yaml_parameters": [
