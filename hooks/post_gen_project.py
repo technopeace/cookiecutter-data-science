@@ -111,8 +111,7 @@ else:
     print(file_name)
 use_yaml_parameters = list(use_yaml_parameters.keys())[0]
 
-def extractDataFromCookieCutter(parameter_name, yes_parameter_name="", no_parameter_name=""):
-    parameter = "{{ cookiecutter.remove_strange_chars_from_column }}"
+def extractDataFromCookieCutter(parameter, yes_parameter_name="", no_parameter_name=""):
     print(parameter_name + ": " + parameter)
     parameter = parameter.replace("'", '"')
     try:
@@ -128,7 +127,7 @@ def extractDataFromCookieCutter(parameter_name, yes_parameter_name="", no_parame
     if no_parameter_var is None:
         print(f"Warning: 'No' key or '{no_parameter_name}' not found in parameter.")
     return parameter, yes_parameter_var, no_parameter_var
-remove_strange_chars_from_column, strange_chars_var, _ = extractDataFromCookieCutter("remove_strange_chars_from_column", "strange_chars")
+remove_strange_chars_from_column, strange_chars_var, _ = extractDataFromCookieCutter("{{ cookiecutter.remove_strange_chars_from_column }}", "strange_chars")
 
 file_types_list = [x.strip() for x in file_types_var.split(",")]
 replace_chars = [x.strip() for x in strange_chars_var.split(",")]
