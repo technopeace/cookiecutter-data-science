@@ -105,7 +105,7 @@ def extractDataFromCookieCutter(parameter, yes_parameter_name="", no_parameter_n
         print(f"Warning: 'No' key or '{no_parameter_name}' not found in parameter.")
     return parameter, yes_parameter_var, no_parameter_var
 
-def process_nested_keys(target_data):
+def process_nested_keys(target_data, target_key):
     def recursive_extract(key, value, prefix=""):
         """
         Recursive function to extract and process nested keys.
@@ -135,10 +135,10 @@ def process_nested_keys(target_data):
 
         return results
 
-    return recursive_extract(target_data)
+    return recursive_extract(target_key, target_data)
 
 # Process the use_yaml_parameters key
-result = process_nested_keys("{{ cookiecutter.use_yaml_parameters }}")
+result = process_nested_keys("{{ cookiecutter.use_yaml_parameters }}", "use_yaml_parameters ")
 
 # Print results
 for key, value in result:
