@@ -118,17 +118,7 @@ def extractDataFromCookieCutter_test(parameter, ccds):
       parameter_values: Parametre değerlerini içeren sözlük.
     """
 
-    parameter_names = {}
-    for key, value in ccds.items():
-        if isinstance(value, list) and all(isinstance(item, dict) for item in value):
-            # 'Yes' ve 'No' durumlarını içeren listeleri tespit et
-            conditions = list(value[0].keys())
-            if "Yes" in conditions and "No" in conditions:
-                parameter_names[key] = {
-                    "Yes": list(value[0]["Yes"].keys()),
-                    "No": list(value[1]["No"].keys())
-                }
-
+    # JSON string'ini parse et
     parameter_str = parameter.replace("'", '"')
     try:
         parameter_json = json.loads(parameter_str)
@@ -136,32 +126,50 @@ def extractDataFromCookieCutter_test(parameter, ccds):
         print(f"Error decoding JSON string: {e}")
         return None, None
 
+    # Anahtar adını al
+    parameter_key = list(parameter_json.keys())[0]
+
+    # Değerleri ayıklamak için rekürsif bir fonksiyon
+    def parse_conditions(json_data, parameter_conditions):
+        parsed_values = {}
+        for condition, details in parameter_conditions.items():
+            if isinstance(details, dict):
+                for key, value in details.items():
+                    # Değer varsa ekle
+                    parsed_values[key] = json_data.get(condition, {}).get(key, None)
+        return parsed_values
+
+    # `ccds` içindeki ilgili yapıyı bul ve ayrıştır
     parameter_values = {}
-    for condition, names in parameter_names.get(list(parameter_json.keys())[0], {}).items():
-        for name in names:
-            # İç içe geçmiş sözlük yapılarını ele alıyoruz
-            if condition == 'Yes':
-                value = parameter_json.get(condition, {}).get(name, None)
-            else:  # condition == 'No'
-                no_dict = parameter_json.get(condition, {})
-                if isinstance(no_dict, list):
-                    no_dict = no_dict[0]  # 'No' durumu için listedeki ilk sözlüğü alıyoruz
-                value = no_dict.get(name, None)
+    for entry in ccds.get(parameter_key, []):
+        if isinstance(entry, dict):
+            parameter_values.update(parse_conditions(parameter_json, entry))
 
-            if value is None:
-                print(f"Warning: '{condition}' key or '{name}' not found in parameter.")
-            parameter_values[name] = value
+    return parameter_key, parameter_values
 
-    return list(parameter_json.keys())[0], parameter_values
 
-# Kullanım örneği:
-use_yaml_parameters, values = extractDataFromCookieCutter_test("{{ cookiecutter.use_yaml_parameters }}", {{ cookiecutter }})
+# Örnek JSON ve parametre string'i
+ccds = {
+    "use_yaml_parameters": [
+        {"Yes": {"yaml_path": "config/config.yaml", "take_columns_from_yaml_to_drop": [
+            {"Yes": {"WARNING_Check_if_the_column_values_are_available_in_YAML_press_enter_to_continue": "okay"}},
+            {"No": {"columns_to_remove": ""}}
+        ]}},
+        {"No": {"input_data_path": "data/input/", "file_name": "data"}}
+    ]
+}
+
+parameter = '{"Yes": {"yaml_path": "config/config.yaml", "take_columns_from_yaml_to_drop": {"No": {"columns_to_remove": ""}}}}'
+
+# Fonksiyon çağrısı
+use_yaml_parameters, values = extractDataFromCookieCutter_test(parameter, ccds)
 
 yaml_path = values.get("yaml_path")
 input_data_path = values.get("input_data_path")
 file_name = values.get("file_name")
+columns_to_remove = values.get("columns_to_remove")
 
-print("RESULTS: ", use_yaml_parameters, yaml_path, input_data_path, file_name)
+print("RESULTS: ", use_yaml_parameters, yaml_path, input_data_path, file_name, columns_to_remove)
 
 # Extract values from the context
 create_notebook_var = "{{ cookiecutter.create_notebook }}"
