@@ -31,6 +31,9 @@
     "docs": ["mkdocs", "none"],
     "include_code_scaffold": ["Yes", "No"],
     "create_notebook": ["Yes", "No"],
+    "remove_strange_chars_from_column ": [
+        {"Yes": {"strange_chars": "[, ], ?, /,  "}}  
+    ],
     "notebook_name": "brake_emission_analysis",
     "use_yaml_parameters": [
         {"Yes": {"yaml_path": "config/config.yaml"}},
