@@ -147,7 +147,7 @@ def extractDataFromCookieCutter(parameter, ccds):
     return list(parameter_json.keys())[0], parameter_values
 
 # Kullanım örneği:
-use_yaml_parameters, values = extractDataFromCookieCutter_test("{{ cookiecutter.use_yaml_parameters }}", {{ cookiecutter }})
+use_yaml_parameters, values = extractDataFromCookieCutter("{{ cookiecutter.use_yaml_parameters }}", {{ cookiecutter }})
 
 yaml_path = values.get("yaml_path")
 input_data_path = values.get("input_data_path")
