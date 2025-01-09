@@ -91,6 +91,7 @@ for generated_path in Path("{{ cookiecutter.module_name }}").iterdir():
 
 # Extract values from the context
 create_notebook_var = "{{ cookiecutter.create_notebook }}"
+remove_strange_chars_from_column = "{{ cookiecutter.remove_strange_chars_from_column }}"
 notebook_name = "{{ cookiecutter.notebook_name }}"
 use_yaml_parameters = "{{ cookiecutter.use_yaml_parameters }}"
 use_yaml_parameters = use_yaml_parameters.replace("'", '"')
@@ -99,6 +100,7 @@ try:
 except json.JSONDecodeError as e:
     print(f"Error decoding JSON string: {e}")
 file_types_var = "{{ cookiecutter.read_file_types }}"
+strange_chars_var = "{{ cookiecutter.strange_chars }}"
 if list(use_yaml_parameters.keys())[0] == 'Yes':
     yaml_path = use_yaml_parameters['Yes']['yaml_path']
     print(yaml_path)
@@ -111,6 +113,7 @@ else:
     print(file_name)
 use_yaml_parameters = list(use_yaml_parameters.keys())[0]
 file_types_list = [x.strip() for x in file_types_var.split(",")]
+replace_chars = [x.strip() for x in strange_chars_var.split(",")]
 print(create_notebook_var)
 print(notebook_name)
 print(use_yaml_parameters)
@@ -137,6 +140,20 @@ def read_from_CSV(input_data_path, file_name):
     csv_file_path = input_data_path / (file_name + ".csv")
     df = pd.read_csv(csv_file_path, header=0, na_values=["---", "Unknown"])
     return csv_file_path, df
+
+def clean_column_of_df(df, replace_chars):
+    # Function to clean column names
+    def clean_column_name(column_name):
+        for char in replace_chars:
+            if char == '/':
+                column_name = column_name.replace(char, 'per')
+            else:
+                column_name = column_name.replace(char, '_')
+        return column_name
+
+    # Clean column names
+    df.columns = [clean_column_name(col) for col in df.columns]
+    return df
     
 def add_source_code_to_cell(cell_source, func):
     """Belirtilen fonksiyonun kaynak kodunu hücre kaynağına ekler."""
@@ -179,7 +196,7 @@ def add_source_code_to_cell(cell_source, func):
     cell_source.append(cleaned_code)
     return cell_source
     
-if create_notebook_var == 'Yes' or True:
+if create_notebook_var == 'Yes':
     notebook_content = {
         "cells": [
             {
@@ -212,6 +229,7 @@ if create_notebook_var == 'Yes' or True:
                     f"input_data_path = '{hard_coded_input_data_path}'\n" if use_yaml_parameters == 'No' else "",
                     f"file_name = '{hard_coded_file_name}'\n" if use_yaml_parameters == 'No' else "",
                     f"yaml_path = '{yaml_path}'\n" if use_yaml_parameters == 'Yes' else "",
+                    f"replace_chars = {strange_chars_var}\n" if remove_strange_chars_from_column == 'Yes' else "",
                     "\n"
                 ]
             },
@@ -221,13 +239,6 @@ if create_notebook_var == 'Yes' or True:
                 "metadata": {},
                 "outputs": [],
                 "source": [
-                    "\n",
-                    "# Function to clean column names\n",
-                    "def clean_column_name(column_name):\n",
-                    "    return column_name.strip().replace('[', '').replace(']', '').replace(' ', '_').replace('?', '').replace('/','per')\n",
-                    "\n",
-                    "# Clean column names\n",
-                    "df.columns = [clean_column_name(col) for col in df.columns]\n",
                     "\n",
                     "columns_to_drop = []\n",
                     "if cfg[\"feature_selection\"][\"columns_to_drop\"] is not None:\n",
@@ -289,6 +300,9 @@ if create_notebook_var == 'Yes' or True:
 
     if "csv" in file_types_list:
         notebook_content["cells"][2]["source"] = add_source_code_to_cell(notebook_content["cells"][2]["source"], read_from_CSV)
-        
+
+    if remove_strange_chars_from_column == 'Yes':
+        notebook_content["cells"][2]["source"] = add_source_code_to_cell(notebook_content["cells"][2]["source"], clean_column_of_df)
+    
     with open('C:\\Users\\u27f79\\.cookiecutters\\cookiecutter-data-science\\deneme.ipynb', 'w') as f:
         json.dump(notebook_content, f)
