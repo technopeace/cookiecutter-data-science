@@ -105,7 +105,51 @@ def extractDataFromCookieCutter(parameter, yes_parameter_name="", no_parameter_n
         print(f"Warning: 'No' key or '{no_parameter_name}' not found in parameter.")
     return parameter, yes_parameter_var, no_parameter_var
 
+def process_nested_keys(data, target_key):
+    def recursive_extract(key, value, prefix=""):
+        """
+        Recursive function to extract and process nested keys.
 
+        Args:
+            key (str): Current key being processed.
+            value: Current value associated with the key.
+            prefix (str): Prefix for nested keys for better readability.
+
+        Returns:
+            list: Processed results for the current level.
+        """
+        results = []
+        current_prefix = f"{prefix}{key}"
+
+        if isinstance(value, dict):
+            for sub_key, sub_value in value.items():
+                results.extend(recursive_extract(sub_key, sub_value, prefix=f"{current_prefix}."))
+        elif isinstance(value, list):
+            for idx, item in enumerate(value):
+                if isinstance(item, dict):
+                    results.extend(recursive_extract(f"[{idx}]", item, prefix=f"{current_prefix}"))
+                else:
+                    results.append((f"{current_prefix}[{idx}]", item))
+        else:
+            results.append((current_prefix, value))
+
+        return results
+
+    # Ensure target_key exists in data
+    if target_key not in data:
+        raise KeyError(f"Key '{target_key}' not found in the provided data.")
+
+    # Extract and process the target_key
+    target_data = data[target_key]
+    return recursive_extract(target_key, target_data)
+
+# Process the use_yaml_parameters key
+result = process_nested_keys("{{cookiecutter}}", 'use_yaml_parameters')
+
+# Print results
+for key, value in result:
+    print(f"{key}: {value}")
+    
 # Extract values from the context
 create_notebook_var = "{{ cookiecutter.create_notebook }}"
 notebook_name = "{{ cookiecutter.notebook_name }}"
