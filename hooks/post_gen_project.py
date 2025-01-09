@@ -147,8 +147,10 @@ def clean_column_of_df(df, replace_chars):
         for char in replace_chars:
             if char == '/':
                 column_name = column_name.replace(char, 'per')
-            else:
+            elif char == " ":
                 column_name = column_name.replace(char, '_')
+            else:
+                column_name = column_name.replace(char, '')
         return column_name
 
     # Clean column names
