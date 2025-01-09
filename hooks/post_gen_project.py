@@ -91,7 +91,6 @@ for generated_path in Path("{{ cookiecutter.module_name }}").iterdir():
 
 # Extract values from the context
 create_notebook_var = "{{ cookiecutter.create_notebook }}"
-remove_strange_chars_from_column = "{{ cookiecutter.remove_strange_chars_from_column }}"
 notebook_name = "{{ cookiecutter.notebook_name }}"
 use_yaml_parameters = "{{ cookiecutter.use_yaml_parameters }}"
 use_yaml_parameters = use_yaml_parameters.replace("'", '"')
@@ -112,7 +111,15 @@ else:
     print(input_data_path)
     print(file_name)
 use_yaml_parameters = list(use_yaml_parameters.keys())[0]
+
+remove_strange_chars_from_column = "{{ cookiecutter.remove_strange_chars_from_column }}"
+remove_strange_chars_from_column = remove_strange_chars_from_column.replace("'", '"')
+try:
+    remove_strange_chars_from_column = json.loads(remove_strange_chars_from_column)
+except json.JSONDecodeError as e:
+    print(f"Error decoding JSON string: {e}")
 remove_strange_chars_from_column = list(remove_strange_chars_from_column.keys())[0]
+
 file_types_list = [x.strip() for x in file_types_var.split(",")]
 replace_chars = [x.strip() for x in strange_chars_var.split(",")]
 print(create_notebook_var)
