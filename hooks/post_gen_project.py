@@ -123,6 +123,7 @@ remove_strange_chars_from_column = list(remove_strange_chars_from_column.keys())
 
 file_types_list = [x.strip() for x in file_types_var.split(",")]
 replace_chars = [x.strip() for x in strange_chars_var.split(",")]
+replace_chars = [char if char != '' else ' ' for char in replace_chars]
 print(create_notebook_var)
 print(notebook_name)
 print(use_yaml_parameters)
