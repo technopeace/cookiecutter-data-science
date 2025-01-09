@@ -111,26 +111,15 @@ else:
     print(file_name)
 use_yaml_parameters = list(use_yaml_parameters.keys())[0]
 
-def extractDataFromCookieCutter(parameter_name, yes_parameter_name="", no_parameter_name=""):
-    parameter = "{{ cookiecutter." + parameter_name + " }}"
-    print(parameter_name + ": " + parameter)
-    parameter = parameter.replace("'", '"')
-    try:
-        parameter = json.loads(parameter)
-    except json.JSONDecodeError as e:
-        print(f"Error decoding JSON string: {e}")
-        return None, None, None
-    yes_parameter_var = parameter.get('Yes', {}).get(yes_parameter_name, None)
-    no_parameter_var = parameter.get('No', {}).get(no_parameter_name, None)
-    parameter = list(parameter.keys())[0]
-    if yes_parameter_var is None:
-        print(f"Warning: 'Yes' key or '{yes_parameter_name}' not found in parameter.")
-    if no_parameter_var is None:
-        print(f"Warning: 'No' key or '{no_parameter_name}' not found in parameter.")
-    return parameter, yes_parameter_var, no_parameter_var
-
-remove_strange_chars_from_column, strange_chars_var, _ = extractDataFromCookieCutter("remove_strange_chars_from_column", "strange_chars")
-
+remove_strange_chars_from_column = "{{ cookiecutter.remove_strange_chars_from_column }}"
+print("remove_strange_chars_from_column: " + remove_strange_chars_from_column)
+remove_strange_chars_from_column = remove_strange_chars_from_column.replace("'", '"')
+try:
+    remove_strange_chars_from_column = json.loads(remove_strange_chars_from_column)
+except json.JSONDecodeError as e:
+    print(f"Error decoding JSON string: {e}")
+strange_chars_var = remove_strange_chars_from_column['Yes']['strange_chars']
+remove_strange_chars_from_column = list(remove_strange_chars_from_column.keys())[0]
 
 file_types_list = [x.strip() for x in file_types_var.split(",")]
 replace_chars = [x.strip() for x in strange_chars_var.split(",")]
@@ -164,14 +153,6 @@ def read_from_CSV(input_data_path, file_name):
     csv_file_path = input_data_path / (file_name + ".csv")
     df = pd.read_csv(csv_file_path, header=0, na_values=["---", "Unknown"])
     return csv_file_path, df
-
-def take_columns_from_yaml_to_drop_func(df, cfg):
-    columns_to_drop = []
-    if cfg["feature_selection"]["columns_to_drop"] is not None:
-        columns_to_drop = cfg["feature_selection"]["columns_to_drop"]
-    
-    df = df.drop(columns=columns_to_drop)
-    return df
 
 def clean_column_of_df(df, replace_chars):
     # Function to clean column names
