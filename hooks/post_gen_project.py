@@ -88,29 +88,6 @@ for generated_path in Path("{{ cookiecutter.module_name }}").iterdir():
         generated_path.write_text("")
 # {% endif %}
 
-
-# Extract values from the context
-create_notebook_var = "{{ cookiecutter.create_notebook }}"
-notebook_name = "{{ cookiecutter.notebook_name }}"
-use_yaml_parameters = "{{ cookiecutter.use_yaml_parameters }}"
-use_yaml_parameters = use_yaml_parameters.replace("'", '"')
-try:
-    use_yaml_parameters = json.loads(use_yaml_parameters)
-except json.JSONDecodeError as e:
-    print(f"Error decoding JSON string: {e}")
-file_types_var = "{{ cookiecutter.read_file_types }}"
-if list(use_yaml_parameters.keys())[0] == 'Yes':
-    yaml_path = use_yaml_parameters['Yes']['yaml_path']
-    print(yaml_path)
-else:
-    input_data_path = use_yaml_parameters['No']['input_data_path']
-    file_name = use_yaml_parameters['No']['file_name']
-    hard_coded_input_data_path = input_data_path 
-    hard_coded_file_name = file_name
-    print(input_data_path)
-    print(file_name)
-use_yaml_parameters = list(use_yaml_parameters.keys())[0]
-
 def extractDataFromCookieCutter(parameter, yes_parameter_name="", no_parameter_name=""):
     parameter = parameter.replace("'", '"')
     try:
@@ -126,6 +103,20 @@ def extractDataFromCookieCutter(parameter, yes_parameter_name="", no_parameter_n
     if no_parameter_var is None:
         print(f"Warning: 'No' key or '{no_parameter_name}' not found in parameter.")
     return parameter, yes_parameter_var, no_parameter_var
+
+
+# Extract values from the context
+create_notebook_var = "{{ cookiecutter.create_notebook }}"
+notebook_name = "{{ cookiecutter.notebook_name }}"
+use_yaml_parameters, yaml_path, input_data_path = extractDataFromCookieCutter("{{ cookiecutter.use_yaml_parameters }}", "yaml_path", "input_data_path")
+use_yaml_parameters, yaml_path, file_name = extractDataFromCookieCutter("{{ cookiecutter.use_yaml_parameters }}", "yaml_path", "file_name")
+
+file_types_var = "{{ cookiecutter.read_file_types }}"
+hard_coded_input_data_path = input_data_path 
+hard_coded_file_name = file_name
+print(input_data_path)
+print(file_name)
+
 remove_strange_chars_from_column, strange_chars_var, _ = extractDataFromCookieCutter("{{ cookiecutter.remove_strange_chars_from_column }}", "strange_chars")
 
 file_types_list = [x.strip() for x in file_types_var.split(",")]
