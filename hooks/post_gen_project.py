@@ -89,7 +89,7 @@ for generated_path in Path("{{ cookiecutter.module_name }}").iterdir():
         generated_path.write_text("")
 # {% endif %}
 
-def extractDataFromCookieCutter_test(parameter, yes_parameter_name="", no_parameter_name=""):
+def extractDataFromCookieCutter(parameter, yes_parameter_name="", no_parameter_name=""):
     parameter = parameter.replace("'", '"')
     try:
         parameter = json.loads(parameter)
@@ -105,7 +105,7 @@ def extractDataFromCookieCutter_test(parameter, yes_parameter_name="", no_parame
         print(f"Warning: 'No' key or '{no_parameter_name}' not found in parameter.")
     return parameter, yes_parameter_var, no_parameter_var
 
-def extractDataFromCookieCutter(parameter, ccds):
+def extractDataFromCookieCutter_test(parameter, ccds):
     """
     CookieCutter parametresini ayrıştırır ve verilen ccds verisine göre değerleri döndürür.
 
@@ -147,7 +147,7 @@ def extractDataFromCookieCutter(parameter, ccds):
     return list(parameter_json.keys())[0], parameter_values
 
 # Kullanım örneği:
-use_yaml_parameters, values = extractDataFromCookieCutter("{{ cookiecutter.use_yaml_parameters }}", {{ cookiecutter }})
+use_yaml_parameters, values = extractDataFromCookieCutter_test("{{ cookiecutter.use_yaml_parameters }}", {{ cookiecutter }})
 
 yaml_path = values.get("yaml_path")
 input_data_path = values.get("input_data_path")
