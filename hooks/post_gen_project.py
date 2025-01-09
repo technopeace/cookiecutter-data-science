@@ -129,6 +129,7 @@ print(use_yaml_parameters)
 print(file_types_list)
 print(remove_strange_chars_from_column)
 print(replace_chars)
+print("strange_chars_var: " + strange_chars_var)
 
 def add_yaml_code():
     """
