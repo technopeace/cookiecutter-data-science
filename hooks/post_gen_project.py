@@ -135,7 +135,7 @@ def process_nested_keys(target_data):
 
         return results
 
-    return recursive_extract(target_key, target_data)
+    return recursive_extract(target_data)
 
 # Process the use_yaml_parameters key
 result = process_nested_keys("{{ cookiecutter.use_yaml_parameters }}")
