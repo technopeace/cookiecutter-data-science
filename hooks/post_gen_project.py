@@ -112,7 +112,6 @@ else:
 use_yaml_parameters = list(use_yaml_parameters.keys())[0]
 
 def extractDataFromCookieCutter(parameter, yes_parameter_name="", no_parameter_name=""):
-    print(parameter_name + ": " + parameter)
     parameter = parameter.replace("'", '"')
     try:
         parameter = json.loads(parameter)
