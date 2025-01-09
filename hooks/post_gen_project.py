@@ -112,7 +112,7 @@ else:
 use_yaml_parameters = list(use_yaml_parameters.keys())[0]
 
 def extractDataFromCookieCutter(parameter_name, yes_parameter_name="", no_parameter_name=""):
-    parameter = "{{ cookiecutter." + parameter_name + " }}"
+    parameter = "{{ cookiecutter.remove_strange_chars_from_column }}"
     print(parameter_name + ": " + parameter)
     parameter = parameter.replace("'", '"')
     try:
@@ -178,7 +178,15 @@ def clean_column_of_df(df, replace_chars):
     # Clean column names
     df.columns = [clean_column_name(col, replace_chars) for col in df.columns]
     return df
+
+def take_columns_from_yaml_to_drop_func(df, cfg):
+    columns_to_drop = []
+    if cfg["feature_selection"]["columns_to_drop"] is not None:
+        columns_to_drop = cfg["feature_selection"]["columns_to_drop"]
     
+    df = df.drop(columns=columns_to_drop)
+    return df
+
 def add_source_code_to_cell(cell_source, func):
     """Belirtilen fonksiyonun kaynak kodunu hücre kaynağına ekler."""
     
