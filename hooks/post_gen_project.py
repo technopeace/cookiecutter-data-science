@@ -155,7 +155,7 @@ def read_from_CSV(input_data_path, file_name):
 
 def clean_column_of_df(df, replace_chars):
     # Function to clean column names
-    def clean_column_name(column_name):
+    def clean_column_name(column_name, replace_chars):
         for char in replace_chars:
             if char == '/':
                 column_name = column_name.replace(char, 'per')
@@ -166,7 +166,7 @@ def clean_column_of_df(df, replace_chars):
         return column_name
 
     # Clean column names
-    df.columns = [clean_column_name(col) for col in df.columns]
+    df.columns = [clean_column_name(col, replace_chars) for col in df.columns]
     return df
     
 def add_source_code_to_cell(cell_source, func):
