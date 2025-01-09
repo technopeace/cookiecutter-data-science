@@ -99,7 +99,6 @@ try:
 except json.JSONDecodeError as e:
     print(f"Error decoding JSON string: {e}")
 file_types_var = "{{ cookiecutter.read_file_types }}"
-strange_chars_var = "{{ cookiecutter.strange_chars }}"
 if list(use_yaml_parameters.keys())[0] == 'Yes':
     yaml_path = use_yaml_parameters['Yes']['yaml_path']
     print(yaml_path)
@@ -120,6 +119,7 @@ try:
 except json.JSONDecodeError as e:
     print(f"Error decoding JSON string: {e}")
 remove_strange_chars_from_column = list(remove_strange_chars_from_column.keys())[0]
+strange_chars_var = remove_strange_chars_from_column['Yes']['strange_chars']
 
 file_types_list = [x.strip() for x in file_types_var.split(",")]
 replace_chars = [x.strip() for x in strange_chars_var.split(",")]
