@@ -135,7 +135,7 @@ def process_nested_keys(target_data, target_key):
 
         return results
     cookiecutter_data = OrderedDict([
-        ('use_yaml_parameters', use_yaml_parameters)
+        (target_key, target_data)
     ])
     return recursive_extract(target_key, cookiecutter_data)
 
