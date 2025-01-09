@@ -106,28 +106,24 @@ def extractDataFromCookieCutter(parameter, yes_parameter_name="", no_parameter_n
     return parameter, yes_parameter_var, no_parameter_var
 
 def extractDataFromCookieCutter_test(parameter, ccds):
-    """
-    CookieCutter parametresini ayrıştırır ve verilen ccds verisine göre değerleri döndürür.
-
-    Args:
-      parameter: CookieCutter parametre string'i.
-      ccds: ccds.json dosyasının içeriği (sözlük olarak).
-
-    Returns:
-      parameter: Ayrıştırılmış parametre.
-      parameter_values: Parametre değerlerini içeren sözlük.
-    """
 
     parameter_names = {}
     for key, value in ccds.items():
         if isinstance(value, list) and all(isinstance(item, dict) for item in value):
-            # 'Yes' ve 'No' durumlarını içeren listeleri tespit et
             conditions = list(value[0].keys())
             if "Yes" in conditions and "No" in conditions:
                 parameter_names[key] = {
-                    "Yes": list(value[0]["Yes"].keys()),
-                    "No": list(value[1]["No"].keys())
+                    "Yes": [],
+                    "No": []
                 }
+                for item in value:
+                    for condition, inner_dict in item.items():
+                        if isinstance(inner_dict, dict):
+                            parameter_names[key][condition].extend(list(inner_dict.keys()))
+                        elif isinstance(inner_dict, list):
+                            for inner_item in inner_dict:
+                                for inner_condition, inner_inner_dict in inner_item.items():
+                                    parameter_names[key][condition].extend(list(inner_inner_dict.keys()))
 
     parameter_str = parameter.replace("'", '"')
     try:
@@ -141,7 +137,13 @@ def extractDataFromCookieCutter_test(parameter, ccds):
         for name in names:
             value = parameter_json.get(condition, {}).get(name, None)
             if value is None:
-                print(f"Warning: '{condition}' key or '{name}' not found in parameter.")
+                if isinstance(parameter_json.get(condition), list):
+                    for item in parameter_json.get(condition):
+                        value = item.get(condition, {}).get(name, None)
+                        if value:
+                            break
+                if value is None:
+                    print(f"Warning: '{condition}' key or '{name}' not found in parameter.")
             parameter_values[name] = value
 
     return list(parameter_json.keys())[0], parameter_values
@@ -154,7 +156,6 @@ input_data_path = values.get("input_data_path")
 file_name = values.get("file_name")
 
 print("RESULTS: ", use_yaml_parameters, yaml_path, input_data_path, file_name)
-
 
 # Extract values from the context
 create_notebook_var = "{{ cookiecutter.create_notebook }}"
