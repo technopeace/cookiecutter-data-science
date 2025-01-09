@@ -112,6 +112,7 @@ else:
     print(input_data_path)
     print(file_name)
 use_yaml_parameters = list(use_yaml_parameters.keys())[0]
+remove_strange_chars_from_column = list(remove_strange_chars_from_column.keys())[0]
 file_types_list = [x.strip() for x in file_types_var.split(",")]
 replace_chars = [x.strip() for x in strange_chars_var.split(",")]
 print(create_notebook_var)
