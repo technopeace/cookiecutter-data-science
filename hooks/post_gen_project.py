@@ -8,6 +8,7 @@ import inspect
 import ast
 import tokenize
 from io import StringIO
+from collections import OrderedDict
 
 # https://github.com/cookiecutter/cookiecutter/issues/824
 #   our workaround is to include these utility functions in the CCDS package
