@@ -115,12 +115,10 @@ use_yaml_parameters = list(use_yaml_parameters.keys())[0]
 remove_strange_chars_from_column = "{{ cookiecutter.remove_strange_chars_from_column }}"
 print("remove_strange_chars_from_column: " + remove_strange_chars_from_column)
 remove_strange_chars_from_column = remove_strange_chars_from_column.replace("'", '"')
-print("remove_strange_chars_from_column with replace: " + remove_strange_chars_from_column)
 try:
     remove_strange_chars_from_column = json.loads(remove_strange_chars_from_column)
 except json.JSONDecodeError as e:
     print(f"Error decoding JSON string: {e}")
-print("remove_strange_chars_from_column formatted: " + remove_strange_chars_from_column)
 remove_strange_chars_from_column = list(remove_strange_chars_from_column.keys())[0]
 
 file_types_list = [x.strip() for x in file_types_var.split(",")]
