@@ -135,8 +135,8 @@ def process_nested_keys(parameter, base_key, prefix="", output_dict = None):
         print(output_dict)
     return output_dict
 
-
-print(process_nested_keys(ast.literal_eval("{{ cookiecutter.use_yaml_parameters }}"), "use_yaml_parameters"))
+output_dict = {} 
+print(process_nested_keys(ast.literal_eval("{{ cookiecutter.use_yaml_parameters }}"), "use_yaml_parameters", output_dict=output_dict))
     
 # Extract values from the context
 create_notebook_var = "{{ cookiecutter.create_notebook }}"
