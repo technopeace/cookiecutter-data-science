@@ -147,7 +147,7 @@ file_types_var = "{{ cookiecutter.read_file_types }}"
 #remove_strange_chars_from_column, strange_chars_var, _ = extractDataFromCookieCutter("{{ cookiecutter.remove_strange_chars_from_column }}", "strange_chars")
 
 file_types_list = [x.strip() for x in file_types_var.split(",")]
-replace_chars = [x.strip() for x in strange_chars_var.split(",")]
+replace_chars = [x.strip() for x in output_dict.get("remove_strange_chars_from_column", "").split(",")]
 replace_chars = [char if char != '' else ' ' for char in replace_chars]
 
 
