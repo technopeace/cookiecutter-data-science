@@ -39,7 +39,7 @@
     "use_yaml_parameters": [
         {"Yes": {"yaml_path": "config/config.yaml", "take_columns_from_yaml_to_drop":[
             "Yes",
-            {"No": {"columns_to_remove": ""}}
+            "No"
         ]}},
         {"No": {"input_data_path": "data/input/", "file_name": "data"}}
     ],
