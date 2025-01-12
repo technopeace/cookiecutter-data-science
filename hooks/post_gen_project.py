@@ -134,13 +134,17 @@ def process_nested_keys(parameter, base_key, prefix="", output_dict = None):
     return output_dict
 
 output_dict = {} 
-print(process_nested_keys(ast.literal_eval("{{ cookiecutter.use_yaml_parameters }}"), "use_yaml_parameters", output_dict=output_dict))
+output_dict  = process_nested_keys(ast.literal_eval("{{ cookiecutter.use_yaml_parameters }}"), "use_yaml_parameters", output_dict=output_dict)
     
 # Extract values from the context
 create_notebook_var = "{{ cookiecutter.create_notebook }}"
 notebook_name = "{{ cookiecutter.notebook_name }}"
-use_yaml_parameters, yaml_path, input_data_path = extractDataFromCookieCutter("{{ cookiecutter.use_yaml_parameters }}", "yaml_path", "input_data_path")
-use_yaml_parameters, yaml_path, file_name = extractDataFromCookieCutter("{{ cookiecutter.use_yaml_parameters }}", "yaml_path", "file_name")
+use_yaml_parameters = output_dict.get("use_yaml_parameters", "")
+yaml_path = output_dict.get("yaml_path", "")
+input_data_path = output_dict.get("input_data_path", "")
+file_name = output_dict.get("file_name", "")
+#use_yaml_parameters, yaml_path, input_data_path = extractDataFromCookieCutter("{{ cookiecutter.use_yaml_parameters }}", "yaml_path", "input_data_path")
+#use_yaml_parameters, yaml_path, file_name = extractDataFromCookieCutter("{{ cookiecutter.use_yaml_parameters }}", "yaml_path", "file_name")
 
 file_types_var = "{{ cookiecutter.read_file_types }}"
 hard_coded_input_data_path = input_data_path 
