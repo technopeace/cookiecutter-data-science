@@ -133,7 +133,8 @@ def process_nested_keys(parameter, base_key, prefix="", output_dict = None):
         output_dict[prefix.split(".")[1]] = parameter
     return output_dict
 
-use_yaml_parameters  = process_nested_keys(ast.literal_eval("{{ cookiecutter.use_yaml_parameters }}"), "use_yaml_parameters", output_dict=use_yaml_parameters)
+use_yaml_parameters  = process_nested_keys(ast.literal_eval("{{ cookiecutter.use_yaml_parameters }}"), "use_yaml_parameters", output_dict={})
+remove_strange_chars_from_column  = process_nested_keys(ast.literal_eval("{{ cookiecutter.remove_strange_chars_from_column }}"), "remove_strange_chars_from_column", output_dict={})
     
 # Extract values from the context
 create_notebook_var = "{{ cookiecutter.create_notebook }}"
@@ -146,7 +147,7 @@ file_types_var = "{{ cookiecutter.read_file_types }}"
 #remove_strange_chars_from_column, strange_chars_var, _ = extractDataFromCookieCutter("{{ cookiecutter.remove_strange_chars_from_column }}", "strange_chars")
 
 file_types_list = [x.strip() for x in file_types_var.split(",")]
-replace_chars = [x.strip() for x in use_yaml_parameters.get("remove_strange_chars_from_column", "").split(",")]
+replace_chars = [x.strip() for x in remove_strange_chars_from_column.get("remove_strange_chars_from_column", "").split(",")]
 replace_chars = [char if char != '' else ' ' for char in replace_chars]
 
 
@@ -270,7 +271,7 @@ if create_notebook_var == 'Yes':
                     f"input_data_path = '{use_yaml_parameters.get('input_data_path', '')}'\n" if use_yaml_parameters.get("use_yaml_parameters", "") == 'No' else "",
                     f"file_name = '{use_yaml_parameters.get('file_name', '')}'\n" if use_yaml_parameters.get("use_yaml_parameters", "") == 'No' else "",
                     f"yaml_path = '{use_yaml_parameters.get('yaml_path', '')}'\n" if use_yaml_parameters.get("use_yaml_parameters", "") == 'Yes' else "",
-                    f"replace_chars = '{output_dict.get('replace_chars', '')}'\n" if output_dict.get("remove_strange_chars_from_column", "") == 'Yes' else "",
+                    f"replace_chars = '{remove_strange_chars_from_column.get('strange_chars', '')}'\n" if remove_strange_chars_from_column.get("remove_strange_chars_from_column", "") == 'Yes' else "",
                     "\n"
                 ]
             },
@@ -342,7 +343,7 @@ if create_notebook_var == 'Yes':
     if "csv" in file_types_list:
         notebook_content["cells"][2]["source"] = add_source_code_to_cell(notebook_content["cells"][2]["source"], read_from_CSV)
 
-    if use_yaml_parameters.get("remove_strange_chars_from_column", "") == 'Yes':
+    if remove_strange_chars_from_column.get("remove_strange_chars_from_column", "") == 'Yes':
         notebook_content["cells"][2]["source"] = add_source_code_to_cell(notebook_content["cells"][2]["source"], clean_column_of_df)
     
     with open('C:\\Users\\u27f79\\.cookiecutters\\cookiecutter-data-science\\deneme.ipynb', 'w') as f:
