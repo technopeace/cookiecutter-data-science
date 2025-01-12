@@ -122,11 +122,11 @@ def process_nested_keys(parameter, base_key, prefix="", output_dict = None):
     if isinstance(parameter, dict):
         for key, value in parameter.items():
             new_prefix = f"{prefix}.{key}" if prefix else key
-            process_nested_keys(value, base_key, new_prefix)
+            process_nested_keys(value, base_key, new_prefix, output_dict)
     elif isinstance(parameter, list):
         for idx, item in enumerate(parameter):
             new_prefix = f"{prefix}[{idx}]"
-            process_nested_keys(item, base_key, new_prefix)
+            process_nested_keys(item, base_key, new_prefix, output_dict)
     else:
         print(f"{prefix}: {parameter}")
         output_dict[base_key] = prefix.split(".")[0]
