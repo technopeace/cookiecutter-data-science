@@ -117,7 +117,8 @@ def process_nested_keys(parameter, base_key, prefix=""):
     Returns:
         None
     """
-    output_dict = {}
+    if output_dict is None:
+        output_dict = {}
     if isinstance(parameter, dict):
         for key, value in parameter.items():
             new_prefix = f"{prefix}.{key}" if prefix else key
