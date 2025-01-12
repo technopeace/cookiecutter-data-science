@@ -271,7 +271,7 @@ if create_notebook_var == 'Yes':
                     f"input_data_path = '{output_dict.get(\"input_data_path\", \"\")}'\n" if output_dict.get("use_yaml_parameters", "") == 'No' else "",
                     f"file_name = '{output_dict.get(\"file_name\", \"\")}'\n" if output_dict.get("use_yaml_parameters", "") == 'No' else "",
                     f"yaml_path = '{output_dict.get(\"yaml_path\", \"\")}'\n" if output_dict.get("use_yaml_parameters", "") == 'Yes' else "",
-                    f"replace_chars = {output_dict.get(\"replace_chars\", \"\")}\n" if output_dict.get("remove_strange_chars_from_column", "") == 'Yes' else "",
+                    f"replace_chars = '{output_dict.get(\"replace_chars\", \"\")}'\n" if output_dict.get("remove_strange_chars_from_column", "") == 'Yes' else "",
                     "\n"
                 ]
             },
