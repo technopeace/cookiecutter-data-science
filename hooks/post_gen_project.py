@@ -106,7 +106,7 @@ def extractDataFromCookieCutter(parameter, yes_parameter_name="", no_parameter_n
     return parameter, yes_parameter_var, no_parameter_var
 
 
-def process_nested_keys(parameter, base_key, prefix=""):
+def process_nested_keys(parameter, base_key, prefix="", output_dict = None):
     """
     JSON içindeki her bir anahtar ve alt anahtarın değerlerini derinlemesine işleyerek yazdırır.
 
