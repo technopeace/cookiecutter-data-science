@@ -281,12 +281,7 @@ if create_notebook_var == 'Yes':
                 "metadata": {},
                 "outputs": [],
                 "source": [
-                    "\n",
-                    "columns_to_drop = []\n",
-                    "if cfg[\"feature_selection\"][\"columns_to_drop\"] is not None:\n",
-                    "    columns_to_drop = cfg[\"feature_selection\"][\"columns_to_drop\"]\n",
-                    "\n",
-                    "df = df.drop(columns=columns_to_drop)"
+                    "\n"
                 ]
             },
             {
@@ -345,6 +340,9 @@ if create_notebook_var == 'Yes':
 
     if remove_strange_chars_from_column.get("remove_strange_chars_from_column", "") == 'Yes':
         notebook_content["cells"][2]["source"] = add_source_code_to_cell(notebook_content["cells"][2]["source"], clean_column_of_df)
+
+    if use_yaml_parameters.get("use_yaml_parameters", "") == 'Yes':
+        notebook_content["cells"][3]["source"] = add_source_code_to_cell(notebook_content["cells"][2]["source"], take_columns_from_yaml_to_drop_func)
     
     with open('C:\\Users\\u27f79\\.cookiecutters\\cookiecutter-data-science\\deneme.ipynb', 'w') as f:
         json.dump(notebook_content, f)
