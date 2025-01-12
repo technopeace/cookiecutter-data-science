@@ -342,7 +342,7 @@ if create_notebook_var == 'Yes':
         notebook_content["cells"][2]["source"] = add_source_code_to_cell(notebook_content["cells"][2]["source"], clean_column_of_df)
 
     if use_yaml_parameters.get("use_yaml_parameters", "") == 'Yes':
-        notebook_content["cells"][3]["source"] = add_source_code_to_cell(notebook_content["cells"][2]["source"], take_columns_from_yaml_to_drop_func)
+        notebook_content["cells"][3]["source"] = add_source_code_to_cell(notebook_content["cells"][3]["source"], take_columns_from_yaml_to_drop_func)
     
     with open('C:\\Users\\u27f79\\.cookiecutters\\cookiecutter-data-science\\deneme.ipynb', 'w') as f:
         json.dump(notebook_content, f)
