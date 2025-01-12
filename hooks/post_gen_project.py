@@ -117,6 +117,7 @@ def process_nested_keys(parameter, prefix=""):
     Returns:
         None
     """
+    output_dict = {}
     if isinstance(parameter, dict):
         for key, value in parameter.items():
             new_prefix = f"{prefix}.{key}" if prefix else key
@@ -127,6 +128,7 @@ def process_nested_keys(parameter, prefix=""):
             process_nested_keys(item, new_prefix)
     else:
         print(f"{prefix}: {parameter}")
+        output_dict[prefix] = parameter
 
 
 process_nested_keys(ast.literal_eval("{{ cookiecutter.use_yaml_parameters }}"))
