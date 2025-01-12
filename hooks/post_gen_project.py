@@ -130,9 +130,7 @@ def process_nested_keys(parameter, base_key, prefix="", output_dict = None):
     else:
         print(f"{prefix}: {parameter}")
         output_dict[base_key] = prefix.split(".")[0]
-        print(output_dict)
         output_dict[prefix.split(".")[1]] = parameter
-        print(output_dict)
     return output_dict
 
 output_dict = {} 
