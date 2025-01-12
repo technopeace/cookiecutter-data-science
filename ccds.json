@@ -37,11 +37,8 @@
     ],
     "notebook_name": "brake_emission_analysis",
     "use_yaml_parameters": [
-        {"Yes": {"yaml_path": "config/config.yaml", "take_columns_from_yaml_to_drop": [
-            "Yes",
-            "No"
-        ]}},
-        {"No": {"input_data_path": "data/input/", "file_name": "data"}}
+        {"Yes": {"yaml_path": "config/config.yaml"}},
+        {"No": {"input_data_path": "data/input/", "file_name": "data", "columns_to_remove": ""}
     ],
     "read_file_types": "csv, mdf"
 }
