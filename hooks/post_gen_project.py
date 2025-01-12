@@ -106,7 +106,7 @@ def extractDataFromCookieCutter(parameter, yes_parameter_name="", no_parameter_n
     return parameter, yes_parameter_var, no_parameter_var
 
 
-def process_nested_keys(parameter, prefix=""):
+def process_nested_keys(parameter, base_key, prefix=""):
     """
     JSON içindeki her bir anahtar ve alt anahtarın değerlerini derinlemesine işleyerek yazdırır.
 
@@ -121,17 +121,19 @@ def process_nested_keys(parameter, prefix=""):
     if isinstance(parameter, dict):
         for key, value in parameter.items():
             new_prefix = f"{prefix}.{key}" if prefix else key
-            process_nested_keys(value, new_prefix)
+            process_nested_keys(value, base_key, new_prefix)
     elif isinstance(parameter, list):
         for idx, item in enumerate(parameter):
             new_prefix = f"{prefix}[{idx}]"
-            process_nested_keys(item, new_prefix)
+            process_nested_keys(item, base_key, new_prefix)
     else:
         print(f"{prefix}: {parameter}")
-        output_dict[prefix] = parameter
+        output_dict[base_key] = prefix.split(".")[0]
+        output_dict[prefix.split(".")[1]] = parameter
+    return output_dict
 
 
-process_nested_keys(ast.literal_eval("{{ cookiecutter.use_yaml_parameters }}"))
+print(process_nested_keys(ast.literal_eval("{{ cookiecutter.use_yaml_parameters }}"), "use_yaml_parameters"))
     
 # Extract values from the context
 create_notebook_var = "{{ cookiecutter.create_notebook }}"
