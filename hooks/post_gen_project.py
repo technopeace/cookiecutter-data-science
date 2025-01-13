@@ -357,14 +357,23 @@ if create_notebook_var == 'Yes':
     thread = threading.Thread(target=dosyayi_oku_ve_goster, args=(txt_dosyasi,))
     thread.start()
 
-    # Markdown hücresine kod hücresi yerleştirin
+    # Markdown hücresine kod hücresinin çıktısını ekleyin
     notebook_content["cells"][4]["source"] = [
         "%%capture output\n",
-        "# Bu hücre 'aciklamalar.txt' dosyasının içeriğini gerçek zamanlı olarak görüntüler.\n",
         "import ipywidgets as widgets\n",
-        "widgets.VBox([out])\n",
-        "output.show()"
+        "widgets.VBox([out])\n"
     ]
+    
+    # Kod hücresinin çıktısını gösterin
+    notebook_content["cells"].insert(5, {
+        "cell_type": "code",
+        "execution_count": None,
+        "metadata": {},
+        "outputs": [],
+        "source": [
+            "output.show()"
+        ]
+    })
     
     with open('C:\\Users\\u27f79\\.cookiecutters\\cookiecutter-data-science\\deneme.ipynb', 'w') as f:
         json.dump(notebook_content, f)
