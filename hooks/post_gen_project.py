@@ -402,17 +402,6 @@ if create_notebook_var == 'Yes':
              ]
             },
             {
-             "cell_type": "code",
-             "execution_count": None,
-             "metadata": {},
-             "outputs": [],
-             "source": [
-              "print(f\"\\nDATASET SUMMARY\\n\")\n",
-              "print(df.describe(include=\"all\"), \"\\n\")\n",
-              "print(df.info(), \"\\n\")"
-             ]
-            },
-            {
              "cell_type": "markdown",
              "metadata": {},
              "source": [
@@ -427,17 +416,17 @@ if create_notebook_var == 'Yes':
         "nbformat_minor": 5
     }
     
-    if use_yaml_parameters.get("use_yaml_parameters", "") == 'Yes':
-        notebook_content["cells"][2]["source"] = add_source_code_to_cell(notebook_content["cells"][2]["source"], add_yaml_code)
+    #if use_yaml_parameters.get("use_yaml_parameters", "") == 'Yes':
+        #notebook_content["cells"][2]["source"] = add_source_code_to_cell(notebook_content["cells"][2]["source"], add_yaml_code)
 
-    if "csv" in file_types_list:
-        notebook_content["cells"][2]["source"] = add_source_code_to_cell(notebook_content["cells"][2]["source"], read_from_CSV)
+    #if "csv" in file_types_list:
+        #notebook_content["cells"][2]["source"] = add_source_code_to_cell(notebook_content["cells"][2]["source"], read_from_CSV)
 
-    if remove_strange_chars_from_column.get("remove_strange_chars_from_column", "") == 'Yes':
-        notebook_content["cells"][2]["source"] = add_source_code_to_cell(notebook_content["cells"][2]["source"], clean_column_of_df)
+    #if remove_strange_chars_from_column.get("remove_strange_chars_from_column", "") == 'Yes':
+        #notebook_content["cells"][2]["source"] = add_source_code_to_cell(notebook_content["cells"][2]["source"], clean_column_of_df)
 
-    if use_yaml_parameters.get("use_yaml_parameters", "") == 'Yes':
-        notebook_content["cells"][3]["source"] = add_source_code_to_cell(notebook_content["cells"][3]["source"], take_columns_from_yaml_to_drop_func)
+    #if use_yaml_parameters.get("use_yaml_parameters", "") == 'Yes':
+        #notebook_content["cells"][3]["source"] = add_source_code_to_cell(notebook_content["cells"][3]["source"], take_columns_from_yaml_to_drop_func)
 
     notebook_content["cells"][4]["source"] = add_source_code_to_cell(notebook_content["cells"][4]["source"], realtime_Reader)
     
