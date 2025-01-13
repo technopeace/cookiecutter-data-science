@@ -320,33 +320,32 @@ def realtime_Reader_2():
     import atexit
     atexit.register(observer.stop)
 
-def run_and_remove_cell(notebook_filename, cell_index_to_run):
-    
+def run_and_remove_cell_but_keep_output(notebook_filename, cell_index_to_run):
+    import nbformat
     from nbconvert.preprocessors import ExecutePreprocessor
-    
+
     # Notebook'u yükle
     with open(notebook_filename, "r", encoding="utf-8") as f:
         notebook_content = nbformat.read(f, as_version=4)
-    
+
     # Çalıştırılacak hücreyi seç
     cells = notebook_content["cells"]
     if cell_index_to_run < len(cells) and cells[cell_index_to_run]["cell_type"] == "code":
-        cell_to_run = cells[cell_index_to_run]
-    
-        # Hücreyi çalıştırmak için bir kernel oluştur ve çalıştır
+        # Hücreyi çalıştır
         ep = ExecutePreprocessor(timeout=600, kernel_name="python3")
         ep.preprocess(notebook_content)
-    
-        # Hücreyi sil
-        del cells[cell_index_to_run]
-    
+
+        # Çıktıyı korumak için kodu temizle ama hücreyi tamamen silme
+        cells[cell_index_to_run]["source"] = ""
+
         # Güncellenen notebook'u kaydet
         with open(notebook_filename, "w", encoding="utf-8") as f:
             nbformat.write(notebook_content, f)
-    
-        print(f"Hücre {cell_index_to_run} çalıştırıldı ve silindi.")
+
+        print(f"Hücre {cell_index_to_run} çalıştırıldı ve kodu temizlendi.")
     else:
         print("Belirtilen hücre kod hücresi değil veya mevcut değil.")
+
 
     
 if create_notebook_var == 'Yes':
