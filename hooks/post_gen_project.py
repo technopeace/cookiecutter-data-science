@@ -317,15 +317,9 @@ def realtime_Reader():
     import atexit
     atexit.register(observer.stop)
 
-def run_and_remove_cell(notebook_filename, cell_index_to_remove):
+def run_and_remove_cell(notebook_filename, cell_index_to_run):
     
     from nbconvert.preprocessors import ExecutePreprocessor
-
-    # Notebook dosyasının adı
-    notebook_filename = "notebook.ipynb"
-    
-    # Çalıştırmak istediğiniz hücre indeksi
-    cell_index_to_run = 4
     
     # Notebook'u yükle
     with open(notebook_filename, "r", encoding="utf-8") as f:
