@@ -336,11 +336,7 @@ def run_and_remove_cell_but_keep_output(notebook_filename, cell_index_to_run):
         ep.preprocess(notebook_content)
 
         # Çıktıyı korumak için kodu temizle ama hücreyi tamamen silme
-        cells[cell_index_to_run]["source"] = ""
-
-        # Güncellenen notebook'u kaydet
-        with open(notebook_filename, "w", encoding="utf-8") as f:
-            nbformat.write(notebook_content, f)
+        #cells[cell_index_to_run]["source"] = ""
 
         print(f"Hücre {cell_index_to_run} çalıştırıldı ve kodu temizlendi.")
     else:
