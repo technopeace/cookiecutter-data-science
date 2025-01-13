@@ -454,6 +454,7 @@ if create_notebook_var == 'Yes':
         json.dump(notebook_content, f)
 
     # Visual Studio Code ile notebook dosyasını aç
-    subprocess.run([vs_code_path, notebook_filename])  # veya subprocess.call() da kullanılabilir 
+    #subprocess.run([vs_code_path, notebook_filename])  # veya subprocess.call() da kullanılabilir 
+    subprocess.run(["jupyter", "nbconvert", "--execute", "--inplace", notebook_filename])
 
     run_and_remove_cell(notebook_filename, 4)
