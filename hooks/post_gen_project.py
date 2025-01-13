@@ -359,7 +359,7 @@ def run_and_remove_cell_but_keep_output(notebook_filename, cell_index_to_run):
         cells.insert(cell_index_to_run + 1, markdown_cell)
         
         # Hücreyi sil
-        del cells[cell_index_to_run]
+        €del cells[cell_index_to_run]
 
         print(f"Hücre {cell_index_to_run} çalıştırıldı ve kodu temizlendi.")
     else:
