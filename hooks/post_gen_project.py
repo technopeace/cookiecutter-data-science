@@ -9,6 +9,8 @@ import ast
 import tokenize
 from io import StringIO
 from collections import OrderedDict
+import ipywidgets as widgets
+import time
 
 # https://github.com/cookiecutter/cookiecutter/issues/824
 #   our workaround is to include these utility functions in the CCDS package
@@ -105,6 +107,20 @@ def extractDataFromCookieCutter(parameter, yes_parameter_name="", no_parameter_n
         print(f"Warning: 'No' key or '{no_parameter_name}' not found in parameter.")
     return parameter, yes_parameter_var, no_parameter_var
 
+# Dosyayı okuyan ve Output widget'ını güncelleyen fonksiyon
+def dosyayi_oku_ve_goster(dosya_adi):
+  with out:
+    while True:
+      try:
+        with open(dosya_adi, 'r', encoding='utf-8') as f:
+          icerik = f.read()
+          out.clear_output(wait=True)  # Önceki çıktıyı temizle
+          print(icerik)
+      except FileNotFoundError:
+        out.clear_output(wait=True)
+        print(f"{dosya_adi} dosyası bulunamadı.")
+      time.sleep(1)  # 1 saniye bekle
+
 
 def process_nested_keys(parameter, base_key, prefix="", output_dict = None):
     """
@@ -132,6 +148,8 @@ def process_nested_keys(parameter, base_key, prefix="", output_dict = None):
         output_dict[base_key] = prefix.split(".")[0]
         output_dict[prefix.split(".")[1]] = parameter
     return output_dict
+
+
 
 use_yaml_parameters  = process_nested_keys(ast.literal_eval("{{ cookiecutter.use_yaml_parameters }}"), "use_yaml_parameters", output_dict={})
 remove_strange_chars_from_column  = process_nested_keys(ast.literal_eval("{{ cookiecutter.remove_strange_chars_from_column }}"), "remove_strange_chars_from_column", output_dict={})
@@ -328,6 +346,21 @@ if create_notebook_var == 'Yes':
 
     if use_yaml_parameters.get("use_yaml_parameters", "") == 'Yes':
         notebook_content["cells"][3]["source"] = add_source_code_to_cell(notebook_content["cells"][3]["source"], take_columns_from_yaml_to_drop_func)
+
+    # .txt dosyanızın adını buraya yazın
+    txt_dosyasi = 'C:\\Users\\u27f79\\.cookiecutters\\cookiecutter-data-science\\aciklama.txt' 
+    
+    # Fonksiyonu çağırın ve Output widget'ını görüntüleyin
+    dosyayi_oku_ve_goster(txt_dosyasi)
+
+    # Markdown hücresine kod hücresi yerleştirin
+    notebook_content["cells"][4]["source"] = [
+        "%%capture output\n",
+        "# Bu hücre 'aciklamalar.txt' dosyasının içeriğini gerçek zamanlı olarak görüntüler.\n",
+        "import ipywidgets as widgets\n",
+        "widgets.VBox([out])\n",
+        "output.show()"
+    ]
     
     with open('C:\\Users\\u27f79\\.cookiecutters\\cookiecutter-data-science\\deneme.ipynb', 'w') as f:
         json.dump(notebook_content, f)
