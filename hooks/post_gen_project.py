@@ -318,26 +318,31 @@ def realtime_Reader():
     atexit.register(observer.stop)
 
 def run_and_remove_cell(notebook_filename, cell_index_to_remove):
-    # Notebook dosyasını aç
-    with open(notebook_filename, 'r', encoding='utf-8') as f:
-        notebook_content = nbformat.read(f, as_version=4)
     
-    # Hücreleri al
-    cells = notebook_content['cells']
+    # Notebook'u yükleyin
+    with open(notebook_filename, "r", encoding="utf-8") as f:
+        notebook = nbformat.read(f, as_version=4)
     
-    # Çalıştırmak istediğiniz hücreyi çalıştırın (örneğin, ilk hücre)
-    if len(cells) > 0:
-        get_ipython().run_cell(cells[cell_index_to_remove]['source'])
+    # Hedef hücreyi alın
+    cells = notebook['cells']
+    if cell_index_to_remove < len(cells):
+        target_cell = cells[cell_index_to_remove]
     
-    # Silmek istediğiniz hücreyi çıkarın
-    if 0 <= cell_index_to_remove < len(cells):
+        # Hücreyi çalıştır
+        if target_cell['cell_type'] == 'code':
+            get_ipython().run_cell(target_cell['source'])  # Hücre içeriğini çalıştır
+    
+        # Hücreyi sil
         del cells[cell_index_to_remove]
     
-    # Güncellenmiş notebook'u kaydedin
-    with open(notebook_filename, 'w', encoding='utf-8') as f:
-        nbformat.write(notebook_content, f)
+        # Güncellenmiş notebook'u kaydedin
+        with open(notebook_filename, "w", encoding="utf-8") as f:
+            nbformat.write(notebook, f)
     
-    print(f"Hücre {cell_index_to_remove} çalıştırıldı ve silindi.")
+        print(f"Hücre {cell_index_to_remove} çalıştırıldı ve silindi.")
+    else:
+        print(f"İndeks {cell_index_to_remove} geçersiz.")
+
     
 if create_notebook_var == 'Yes':
     notebook_content = {
