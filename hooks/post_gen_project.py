@@ -319,29 +319,37 @@ def realtime_Reader():
 
 def run_and_remove_cell(notebook_filename, cell_index_to_remove):
     
-    # Notebook'u yükleyin
+    from nbconvert.preprocessors import ExecutePreprocessor
+
+    # Notebook dosyasının adı
+    notebook_filename = "notebook.ipynb"
+    
+    # Çalıştırmak istediğiniz hücre indeksi
+    cell_index_to_run = 4
+    
+    # Notebook'u yükle
     with open(notebook_filename, "r", encoding="utf-8") as f:
-        notebook = nbformat.read(f, as_version=4)
+        notebook_content = nbformat.read(f, as_version=4)
     
-    # Hedef hücreyi alın
-    cells = notebook['cells']
-    if cell_index_to_remove < len(cells):
-        target_cell = cells[cell_index_to_remove]
+    # Çalıştırılacak hücreyi seç
+    cells = notebook_content["cells"]
+    if cell_index_to_run < len(cells) and cells[cell_index_to_run]["cell_type"] == "code":
+        cell_to_run = cells[cell_index_to_run]
     
-        # Hücreyi çalıştır
-        if target_cell['cell_type'] == 'code':
-            get_ipython().run_cell(target_cell['source'])  # Hücre içeriğini çalıştır
+        # Hücreyi çalıştırmak için bir kernel oluştur ve çalıştır
+        ep = ExecutePreprocessor(timeout=600, kernel_name="python3")
+        ep.preprocess(notebook_content)
     
         # Hücreyi sil
-        del cells[cell_index_to_remove]
+        del cells[cell_index_to_run]
     
-        # Güncellenmiş notebook'u kaydedin
+        # Güncellenen notebook'u kaydet
         with open(notebook_filename, "w", encoding="utf-8") as f:
-            nbformat.write(notebook, f)
+            nbformat.write(notebook_content, f)
     
-        print(f"Hücre {cell_index_to_remove} çalıştırıldı ve silindi.")
+        print(f"Hücre {cell_index_to_run} çalıştırıldı ve silindi.")
     else:
-        print(f"İndeks {cell_index_to_remove} geçersiz.")
+        print("Belirtilen hücre kod hücresi değil veya mevcut değil.")
 
     
 if create_notebook_var == 'Yes':
