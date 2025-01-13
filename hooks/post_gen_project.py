@@ -117,6 +117,7 @@ def dosyayi_oku_ve_goster(dosya_adi):
             with open(dosya_adi, 'r', encoding='utf-8') as f:
               icerik = f.read()
               out.clear_output(wait=True)  # Önceki çıktıyı temizle
+              output.show()
               print(icerik)
           except FileNotFoundError:
             out.clear_output(wait=True)
@@ -361,19 +362,10 @@ if create_notebook_var == 'Yes':
     notebook_content["cells"][4]["source"] = [
         "%%capture output\n",
         "import ipywidgets as widgets\n",
-        "widgets.VBox([out])\n"
+        "widgets.VBox([out])\n",
+        "output.show()\n"
     ]
     
-    # Kod hücresinin çıktısını gösterin
-    notebook_content["cells"].insert(5, {
-        "cell_type": "code",
-        "execution_count": None,
-        "metadata": {},
-        "outputs": [],
-        "source": [
-            "output.show()"
-        ]
-    })
     
     with open('C:\\Users\\u27f79\\.cookiecutters\\cookiecutter-data-science\\deneme.ipynb', 'w') as f:
         json.dump(notebook_content, f)
