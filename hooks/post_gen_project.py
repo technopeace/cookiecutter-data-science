@@ -453,8 +453,22 @@ if create_notebook_var == 'Yes':
     with open(notebook_filename, 'w') as f:
         json.dump(notebook_content, f)
 
-    # Visual Studio Code ile notebook dosyasını aç
-    subprocess.run(["jupyter", "nbconvert", "--execute", "--inplace", notebook_filename])
+    try:
+        # Jupyter notebook'u çalıştır ve inplace değiştir
+        result = subprocess.run(
+            ["jupyter", "nbconvert", "--execute", "--inplace", notebook_filename],
+            check=False,  # Hata durumunda terminal sonlanmasın
+            stdout=subprocess.PIPE,  # Çıktıyı yakala
+            stderr=subprocess.PIPE   # Hataları yakala
+        )
+    
+        # Hataları kontrol et
+        if result.returncode != 0:
+            print(f"Notebook çalıştırılırken bir hata oluştu:\n{result.stderr.decode('utf-8')}")
+        else:
+            print("Notebook başarıyla çalıştırıldı.")
+    except Exception as e:
+        print(f"Bir hata oluştu: {e}")
 
     #run_and_remove_cell(notebook_filename, 4)
 
