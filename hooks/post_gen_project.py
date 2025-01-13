@@ -306,22 +306,7 @@ if create_notebook_var == 'Yes':
              "cell_type": "markdown",
              "metadata": {},
              "source": [
-              "***Review***\n",
-              "\n",
-              "By checking the min-max values of numeric columns, the number of missing values, and the unique values of categorical features, we can identify whether there are logically inconsistent or questionable data points.\n",
-              "Here are the list of features which don't have enough data to represent (# of missing points > 0.5 * number of total rows):\n",
-              "\n",
-              "* Measurment_ID\n",
-              "* TestBedperTestBench\n",
-              "* pipeDiameter_mm\n",
-              "* VehicleMarket_-\n",
-              "* VehicleMax._laden_mass_kg\n",
-              "* VehicleMax._vehicle_load_(MVL)_kg\n",
-              "* DiscType_-\n",
-              "* DiscSurface_-\n",
-              "* Piston_Area_cm^2\n",
-              "\n",
-              "These will be removed from the dataframe due to high number of missing values."
+              
              ]
             }
         ],
