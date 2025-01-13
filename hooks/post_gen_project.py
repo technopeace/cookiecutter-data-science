@@ -11,6 +11,7 @@ from io import StringIO
 from collections import OrderedDict
 import ipywidgets as widgets
 import time
+import threading
 
 # https://github.com/cookiecutter/cookiecutter/issues/824
 #   our workaround is to include these utility functions in the CCDS package
@@ -352,8 +353,9 @@ if create_notebook_var == 'Yes':
     txt_dosyasi = 'C:\\Users\\u27f79\\.cookiecutters\\cookiecutter-data-science\\aciklama.txt' 
 
     
-    # Fonksiyonu çağırın ve Output widget'ını görüntüleyin
-    dosyayi_oku_ve_goster(txt_dosyasi)
+    # Fonksiyonu ayrı bir thread'de çalıştırın
+    thread = threading.Thread(target=dosyayi_oku_ve_goster, args=(txt_dosyasi,))
+    thread.start()
 
     # Markdown hücresine kod hücresi yerleştirin
     notebook_content["cells"][4]["source"] = [
