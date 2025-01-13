@@ -266,6 +266,9 @@ def add_source_code_to_cell(cell_source, func):
     return cell_source
 
 def realtime_Reader():
+    print("Hello world")
+
+def realtime_Reader_2():
     import os
     import time
     from watchdog.observers import Observer
