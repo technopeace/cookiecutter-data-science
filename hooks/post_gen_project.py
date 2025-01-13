@@ -12,6 +12,7 @@ from collections import OrderedDict
 import ipywidgets as widgets
 import time
 import threading
+import subprocess
 
 # https://github.com/cookiecutter/cookiecutter/issues/824
 #   our workaround is to include these utility functions in the CCDS package
@@ -151,7 +152,10 @@ def process_nested_keys(parameter, base_key, prefix="", output_dict = None):
         output_dict[prefix.split(".")[1]] = parameter
     return output_dict
 
+vs_code_path = "C:\\Program Files\\Microsoft VS Code\\Code.exe" # Visual Studio Code'un path'ini belirtin
 
+# Dosya adı
+notebook_filename = 'C:\\Users\\u27f79\\.cookiecutters\\cookiecutter-data-science\\deneme.ipynb'
 
 use_yaml_parameters  = process_nested_keys(ast.literal_eval("{{ cookiecutter.use_yaml_parameters }}"), "use_yaml_parameters", output_dict={})
 remove_strange_chars_from_column  = process_nested_keys(ast.literal_eval("{{ cookiecutter.remove_strange_chars_from_column }}"), "remove_strange_chars_from_column", output_dict={})
@@ -366,5 +370,8 @@ if create_notebook_var == 'Yes':
     ]
     
     
-    with open('C:\\Users\\u27f79\\.cookiecutters\\cookiecutter-data-science\\deneme.ipynb', 'w') as f:
+    with open(notebook_filename, 'w') as f:
         json.dump(notebook_content, f)
+
+    # Visual Studio Code ile notebook dosyasını aç
+    subprocess.run([vs_code_path, notebook_filename])  # veya subprocess.call() da kullanılabilir
