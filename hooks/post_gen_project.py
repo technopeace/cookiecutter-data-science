@@ -116,8 +116,8 @@ def dosyayi_oku_ve_goster(dosya_adi):
           try:
             with open(dosya_adi, 'r', encoding='utf-8') as f:
               icerik = f.read()
+              widgets.Output() = icerik
               out.clear_output(wait=True)  # Önceki çıktıyı temizle
-              output.show()
               print(icerik)
           except FileNotFoundError:
             out.clear_output(wait=True)
