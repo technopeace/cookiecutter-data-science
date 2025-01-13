@@ -456,4 +456,4 @@ if create_notebook_var == 'Yes':
     # Visual Studio Code ile notebook dosyasını aç
     subprocess.run([vs_code_path, notebook_filename])  # veya subprocess.call() da kullanılabilir 
 
-    #run_and_remove_cell(notebook_filename, 4)
+    run_and_remove_cell(notebook_filename, 4)
