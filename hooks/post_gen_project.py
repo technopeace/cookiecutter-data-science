@@ -338,6 +338,29 @@ def run_and_remove_cell_but_keep_output(notebook_filename, cell_index_to_run):
         # Çıktıyı korumak için kodu temizle ama hücreyi tamamen silme
         #cells[cell_index_to_run]["source"] = ""
 
+        # Çalıştırılan hücreden çıkan çıktıyı alın
+        output_cell = cells[cell_index_to_run]
+        outputs = output_cell.get("outputs", [])
+        markdown_output = ""
+
+        for output in outputs:
+            if "text" in output:
+                markdown_output += output["text"]  # Text çıktısı
+            elif "text/plain" in output["data"]:
+                markdown_output += output["data"]["text/plain"]  # Plain text çıktısı
+
+        # Çıkışları Markdown hücresi olarak ekle
+        if markdown_output.strip():
+            markdown_cell = {
+                "cell_type": "markdown",
+                "metadata": {},
+                "source": markdown_output
+            }
+        cells.insert(cell_index_to_run + 1, markdown_cell)
+        
+        # Hücreyi sil
+        del cells[cell_index_to_run]
+
         print(f"Hücre {cell_index_to_run} çalıştırıldı ve kodu temizlendi.")
     else:
         print("Belirtilen hücre kod hücresi değil veya mevcut değil.")
