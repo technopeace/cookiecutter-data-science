@@ -111,16 +111,16 @@ def extractDataFromCookieCutter(parameter, yes_parameter_name="", no_parameter_n
 def dosyayi_oku_ve_goster(dosya_adi):
     out = widgets.Output()
     with out:
-    while True:
-      try:
-        with open(dosya_adi, 'r', encoding='utf-8') as f:
-          icerik = f.read()
-          out.clear_output(wait=True)  # Önceki çıktıyı temizle
-          print(icerik)
-      except FileNotFoundError:
-        out.clear_output(wait=True)
-        print(f"{dosya_adi} dosyası bulunamadı.")
-      time.sleep(1)  # 1 saniye bekle
+        while True:
+          try:
+            with open(dosya_adi, 'r', encoding='utf-8') as f:
+              icerik = f.read()
+              out.clear_output(wait=True)  # Önceki çıktıyı temizle
+              print(icerik)
+          except FileNotFoundError:
+            out.clear_output(wait=True)
+            print(f"{dosya_adi} dosyası bulunamadı.")
+          time.sleep(1)  # 1 saniye bekle
 
 
 def process_nested_keys(parameter, base_key, prefix="", output_dict = None):
