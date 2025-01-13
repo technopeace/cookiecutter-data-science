@@ -109,7 +109,8 @@ def extractDataFromCookieCutter(parameter, yes_parameter_name="", no_parameter_n
 
 # Dosyayı okuyan ve Output widget'ını güncelleyen fonksiyon
 def dosyayi_oku_ve_goster(dosya_adi):
-  with out:
+    out = widgets.Output()
+    with out:
     while True:
       try:
         with open(dosya_adi, 'r', encoding='utf-8') as f:
@@ -349,6 +350,7 @@ if create_notebook_var == 'Yes':
 
     # .txt dosyanızın adını buraya yazın
     txt_dosyasi = 'C:\\Users\\u27f79\\.cookiecutters\\cookiecutter-data-science\\aciklama.txt' 
+
     
     # Fonksiyonu çağırın ve Output widget'ını görüntüleyin
     dosyayi_oku_ve_goster(txt_dosyasi)
