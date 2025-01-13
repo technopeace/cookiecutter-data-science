@@ -13,6 +13,9 @@ import ipywidgets as widgets
 import time
 import threading
 import subprocess
+import nbformat
+from nbconvert import PythonExporter
+from IPython import get_ipython
 
 # https://github.com/cookiecutter/cookiecutter/issues/824
 #   our workaround is to include these utility functions in the CCDS package
@@ -261,6 +264,80 @@ def add_source_code_to_cell(cell_source, func):
     # Hücre kaynağına ekle
     cell_source.append(cleaned_code)
     return cell_source
+
+def realtime_Reader():
+    import os
+    import time
+    from watchdog.observers import Observer
+    from watchdog.events import FileSystemEventHandler
+    from IPython.display import display, Markdown, clear_output
+    import ipywidgets as widgets
+    
+    # Dosya adı
+    dosya_adi = "aciklamaa.txt"
+    
+    # Output widget'ı oluştur
+    out = widgets.Output()
+    
+    # Dosya değişikliği olayını işleyen sınıf
+    class DosyaDegisikligiHandler(FileSystemEventHandler):
+        def on_modified(self, event):
+            if event.src_path.endswith(dosya_adi):
+                self.guncelle()
+    
+        def guncelle(self):
+            try:
+                # Dosyayı okuma ve widget'ı güncelleme
+                with open(dosya_adi, "r", encoding="utf-8") as file:
+                    icerik = file.read()
+                with out:
+                    clear_output(wait=True)  # Önceki çıktıyı temizle
+                    display(Markdown(icerik))  # Yeni içeriği görüntüle
+            except FileNotFoundError:
+                # Dosya bulunamadığında hata mesajı göster
+                with out:
+                    clear_output(wait=True)
+                    display(Markdown("**Dosya bulunamadı!**"))
+                    # Dosya kaybolduğunda da izlemeye devam et
+                    event_handler.guncelle()
+    
+    # İzleyici ve olay işleyici oluştur
+    event_handler = DosyaDegisikligiHandler()
+    observer = Observer()
+    observer.schedule(event_handler, path=".", recursive=False)
+    
+    # Widget'ı göster ve başlangıçtaki içeriği yükle
+    display(out)
+    event_handler.guncelle()  # Başlangıçtaki dosya içeriğini göster
+    
+    # İzleme işlemi için izleyiciyi başlat
+    observer.start()
+    
+    # İzleyici işlemi sürekli olarak çalışmaya devam etsin
+    import atexit
+    atexit.register(observer.stop)
+
+def run_and_remove_cell(notebook_filename, cell_index_to_remove):
+    # Notebook dosyasını aç
+    with open(notebook_filename, 'r', encoding='utf-8') as f:
+        notebook_content = nbformat.read(f, as_version=4)
+    
+    # Hücreleri al
+    cells = notebook_content['cells']
+    
+    # Çalıştırmak istediğiniz hücreyi çalıştırın (örneğin, ilk hücre)
+    if len(cells) > 0:
+        get_ipython().run_cell(cells[cell_index_to_remove]['source'])
+    
+    # Silmek istediğiniz hücreyi çıkarın
+    if 0 <= cell_index_to_remove < len(cells):
+        del cells[cell_index_to_remove]
+    
+    # Güncellenmiş notebook'u kaydedin
+    with open(notebook_filename, 'w', encoding='utf-8') as f:
+        nbformat.write(notebook_content, f)
+    
+    print(f"Hücre {cell_index_to_remove} çalıştırıldı ve silindi.")
     
 if create_notebook_var == 'Yes':
     notebook_content = {
@@ -296,6 +373,15 @@ if create_notebook_var == 'Yes':
                     f"file_name = '{use_yaml_parameters.get('file_name', '')}'\n" if use_yaml_parameters.get("use_yaml_parameters", "") == 'No' else "",
                     f"yaml_path = '{use_yaml_parameters.get('yaml_path', '')}'\n" if use_yaml_parameters.get("use_yaml_parameters", "") == 'Yes' else "",
                     f"replace_chars = '{remove_strange_chars_from_column.get('strange_chars', '')}'\n" if remove_strange_chars_from_column.get("remove_strange_chars_from_column", "") == 'Yes' else "",
+                    "\n"
+                ]
+            },
+            {
+                "cell_type": "code",
+                "execution_count": None,
+                "metadata": {},
+                "outputs": [],
+                "source": [
                     "\n"
                 ]
             },
@@ -353,25 +439,21 @@ if create_notebook_var == 'Yes':
     if use_yaml_parameters.get("use_yaml_parameters", "") == 'Yes':
         notebook_content["cells"][3]["source"] = add_source_code_to_cell(notebook_content["cells"][3]["source"], take_columns_from_yaml_to_drop_func)
 
+    notebook_content["cells"][4]["source"] = add_source_code_to_cell(notebook_content["cells"][4]["source"], realtime_Reader)
+    
     # .txt dosyanızın adını buraya yazın
     txt_dosyasi = 'C:\\Users\\u27f79\\.cookiecutters\\cookiecutter-data-science\\aciklama.txt' 
 
     
     # Fonksiyonu ayrı bir thread'de çalıştırın
     thread = threading.Thread(target=dosyayi_oku_ve_goster, args=(txt_dosyasi,))
-    thread.start()
-
-    # Markdown hücresine kod hücresinin çıktısını ekleyin
-    notebook_content["cells"][4]["source"] = [
-        "%%capture output\n",
-        "import ipywidgets as widgets\n",
-        "widgets.VBox([out])\n",
-        "output.show()\n"
-    ]
+    #thread.start()
     
     
     with open(notebook_filename, 'w') as f:
         json.dump(notebook_content, f)
 
     # Visual Studio Code ile notebook dosyasını aç
-    subprocess.run([vs_code_path, notebook_filename])  # veya subprocess.call() da kullanılabilir
+    subprocess.run([vs_code_path, notebook_filename])  # veya subprocess.call() da kullanılabilir 
+
+    #run_and_remove_cell(notebook_filename, 4)
