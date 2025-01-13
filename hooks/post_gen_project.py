@@ -320,6 +320,7 @@ def realtime_Reader_2():
     import atexit
     atexit.register(observer.stop)
 
+
 def run_and_remove_cell_but_keep_output(notebook_filename, cell_index_to_run):
     import nbformat
     from nbconvert.preprocessors import ExecutePreprocessor
@@ -339,14 +340,14 @@ def run_and_remove_cell_but_keep_output(notebook_filename, cell_index_to_run):
         #cells[cell_index_to_run]["source"] = ""
 
         # Çalıştırılan hücreden çıkan çıktıyı alın
-        output_cell = cells[cell_index_to_run]
-        outputs = output_cell.get("outputs", [])
+        cell_to_run = cells[cell_index_to_run]
+        outputs = cell_to_run.get("outputs", [])
         markdown_output = ""
 
         for output in outputs:
             if "text" in output:
                 markdown_output += output["text"]  # Text çıktısı
-            elif "text/plain" in output["data"]:
+            elif "text/plain" in output.get("data", {}):
                 markdown_output += output["data"]["text/plain"]  # Plain text çıktısı
 
         # Çıkışları Markdown hücresi olarak ekle
@@ -356,18 +357,19 @@ def run_and_remove_cell_but_keep_output(notebook_filename, cell_index_to_run):
                 "metadata": {},
                 "source": markdown_output
             }
-        cells.insert(cell_index_to_run + 1, markdown_cell)
-        
-        # Hücreyi sil
+            cells.insert(cell_index_to_run + 1, markdown_cell)
+
+        # Çalıştırılan hücreyi sil
         del cells[cell_index_to_run]
 
         # Güncellenen notebook'u kaydet
         with open(notebook_filename, "w", encoding="utf-8") as f:
             nbformat.write(notebook_content, f)
 
-        print(f"Hücre {cell_index_to_run} çalıştırıldı ve kodu temizlendi.")
+        print(f"Hücre {cell_index_to_run} çalıştırıldı, çıktısı eklendi ve silindi.")
     else:
         print("Belirtilen hücre kod hücresi değil veya mevcut değil.")
+
 
 def run_cell_and_save_output(notebook_filename, cell_index_to_run):
     import nbformat
