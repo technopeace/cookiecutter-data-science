@@ -509,7 +509,7 @@ if create_notebook_var == 'Yes':
 
     
     # Hücreyi çalıştır
-    run_cell_with_env_selection(vs_code_path, notebook_filename, 4)
+    run_cell_with_env_selection(vs_code_path, notebook_filename, 3)
     
 
     #time.sleep(60) 
