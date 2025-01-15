@@ -476,32 +476,49 @@ if create_notebook_var == 'Yes':
     with open(notebook_filename, 'w') as f:
         json.dump(notebook_content, f)
 
-    def run_cell_by_index(vscode_path, notebook_path, cell_index):
+    def run_cell_with_env_selection(vscode_path, notebook_path, cell_index):
         """
-        Visual Studio Code üzerinde belirtilen hücre indeksini çalıştırır.
+        Belirtilen hücreyi çalıştırır ve Python Environment seçim sürecini otomatikleştirir.
         """
-        # VS Code'u aç
+        # Visual Studio Code'u aç ve notebook'u yükle
         subprocess.Popen([vscode_path, notebook_path])
         
-        # VS Code'un açılması için süre tanıyın
-        time.sleep(45)
+        # VS Code'un yüklenmesi için süre tanı
+        time.sleep(5)
+        
+        # Python Environment seçimi
+        pyautogui.hotkey('ctrl', 'shift', 'p')  # Komut paletini aç
+        time.sleep(1)
+        pyautogui.typewrite("Python: Select Interpreter")  # Ortam seçim komutunu yaz
+        pyautogui.press('enter')  # Komutu çalıştır
+        time.sleep(2)
+        
+        # "Python Environment" seçimi
+        pyautogui.typewrite("Python Environment")
+        pyautogui.press('enter')
+        time.sleep(2)
+    
+        # "Python 3.9" seçimi
+        pyautogui.typewrite("Python 3.9")  # Python sürümünü yaz
+        pyautogui.press('enter')
+        time.sleep(5)  # Ortamın yüklenmesini bekle
         
         # Notebook'un başına git
-        pyautogui.hotkey('ctrl', 'home')  # İlk hücreye gitmek için
+        pyautogui.hotkey('ctrl', 'home')  # İlk hücreye git
         time.sleep(1)
         
         # Hedef hücreye gitmek için `down` tuşuna bas
         for _ in range(cell_index):
             pyautogui.press('down')
             time.sleep(0.1)
-    
+        
         # Hücreyi çalıştır
-        pyautogui.hotkey('shift', 'enter')  # Hücreyi çalıştırmak için
+        pyautogui.hotkey('shift', 'enter')  # Hücreyi çalıştır
         print(f"Hücre {cell_index} çalıştırıldı!")
 
     
     # Hücreyi çalıştır
-    run_cell_by_index(vs_code_path, notebook_filename, 4)
+    run_cell_with_env_selection(vs_code_path, notebook_filename, 4)
     
 
     #time.sleep(60) 
