@@ -492,11 +492,6 @@ if create_notebook_var == 'Yes':
         pyautogui.typewrite("Python: Select Interpreter")  # Ortam seçim komutunu yaz
         pyautogui.press('enter')  # Komutu çalıştır
         time.sleep(2)
-        
-        # "Python Environment" seçimi
-        pyautogui.typewrite("Python Environment")
-        pyautogui.press('enter')
-        time.sleep(2)
     
         # "Python 3.9" seçimi
         pyautogui.typewrite("Python 3.9")  # Python sürümünü yaz
@@ -505,7 +500,7 @@ if create_notebook_var == 'Yes':
         
         # Notebook'un başına git
         pyautogui.hotkey('ctrl', 'home')  # İlk hücreye git
-        time.sleep(30)
+        time.sleep(35)
         
         # Hedef hücreye gitmek için `down` tuşuna bas
         for _ in range(cell_index):
