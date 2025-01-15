@@ -329,7 +329,7 @@ def realtime_Reader():
         # Güncellenen notebook'u kaydet
         with open(notebook_filename, "w", encoding="utf-8") as f:
             try:
-                nbformat.write(nbformat.from_dict(notebook_content), f)
+                nbformat.write(nbformat.from_dict(cells), f)
             except Exception as e:
                 print(f"Notebook kaydedilirken hata oluştu: {e}")
     
