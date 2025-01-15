@@ -476,24 +476,32 @@ if create_notebook_var == 'Yes':
     with open(notebook_filename, 'w') as f:
         json.dump(notebook_content, f)
 
-    def open_vscode_and_run_cell(vscode_path, notebook_path, cell_index=0):
-        # Visual Studio Code'u aç
+    def run_cell_by_index(vscode_path, notebook_path, cell_index):
+        """
+        Visual Studio Code üzerinde belirtilen hücre indeksini çalıştırır.
+        """
+        # VS Code'u aç
         subprocess.Popen([vscode_path, notebook_path])
         
         # VS Code'un açılması için süre tanıyın
-        time.sleep(5)
-    
-        # Hücreye odaklanmak ve çalıştırmak için PyAutoGUI ile otomasyon
-        pyautogui.hotkey('ctrl', 'shift', 'p')  # Komut paletini aç
-        time.sleep(60)
-        pyautogui.typewrite("Run Cell")        # "Run Cell" komutunu yaz
+        time.sleep(45)
+        
+        # Notebook'un başına git
+        pyautogui.hotkey('ctrl', 'home')  # İlk hücreye gitmek için
         time.sleep(1)
-        pyautogui.press('enter')              # Komutu çalıştır
+        
+        # Hedef hücreye gitmek için `down` tuşuna bas
+        for _ in range(cell_index):
+            pyautogui.press('down')
+            time.sleep(0.1)
+    
+        # Hücreyi çalıştır
+        pyautogui.hotkey('shift', 'enter')  # Hücreyi çalıştırmak için
         print(f"Hücre {cell_index} çalıştırıldı!")
 
     
     # Hücreyi çalıştır
-    open_vscode_and_run_cell(vs_code_path, notebook_filename, 4)
+    run_cell_by_index(vs_code_path, notebook_filename, 4)
     
 
     #time.sleep(60) 
