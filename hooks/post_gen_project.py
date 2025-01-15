@@ -341,7 +341,7 @@ def realtime_Reader():
     notebook_filename = 'C:\\Users\\u27f79\\.cookiecutters\\cookiecutter-data-science\\deneme.ipynb'
     dosya_adi = 'aciklamaa.txt'
     out = widgets.Output()
-    
+    icerik = ""
     class DosyaDegisikligiHandler(FileSystemEventHandler):
         def on_modified(self, event):
             if event.src_path.endswith(dosya_adi):
@@ -350,6 +350,7 @@ def realtime_Reader():
         def guncelle(self):
             try:
                 with open(dosya_adi, 'r', encoding='utf-8') as file:
+                    global icerik
                     icerik = file.read()
                 with out:
                     clear_output(wait=True)
