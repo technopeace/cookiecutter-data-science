@@ -324,8 +324,8 @@ def realtime_Reader():
     try:
         observer.start()
         while not stop_event:  # stop_event True olduğunda döngü sonlanır
-        time.sleep(1)
-        event_handler.guncelle()  # Dosya içeriğini kontrol et
+            time.sleep(1)
+            event_handler.guncelle()  # Dosya içeriğini kontrol et
     except KeyboardInterrupt:
         pass  # Manuel durdurmayı destekle
     finally:
