@@ -485,7 +485,7 @@ if create_notebook_var == 'Yes':
     
         # Hücreye odaklanmak ve çalıştırmak için PyAutoGUI ile otomasyon
         pyautogui.hotkey('ctrl', 'shift', 'p')  # Komut paletini aç
-        time.sleep(1)
+        time.sleep(60)
         pyautogui.typewrite("Run Cell")        # "Run Cell" komutunu yaz
         time.sleep(1)
         pyautogui.press('enter')              # Komutu çalıştır
@@ -493,7 +493,7 @@ if create_notebook_var == 'Yes':
 
     
     # Hücreyi çalıştır
-    open_vscode_and_run_cell(vs_code_path, notebook_filename)
+    open_vscode_and_run_cell(vs_code_path, notebook_filename, 4)
     
 
     #time.sleep(60) 
