@@ -319,20 +319,23 @@ def realtime_Reader():
             "metadata": {},
             "source": markdown_output
         }
-        print("icerik:" + icerik)
-        print(cells)
+
         cells.insert(cell_index_to_run + 1, markdown_cell)
-        print("afterinsert")
-        print(cells)
+
         # Çalıştırılan hücreyi sil
         del cells[cell_index_to_run]
-        print("afterdelete")
-        print(cells)
-    
+
+        # Notebook yapısını yeniden oluşturun
+        notebook_content = {
+            'cells': cells,  # Güncellenmiş hücreler
+            'metadata': {},  # Metadata boş bırakılabilir veya özelleştirilebilir
+            'nbformat': 4,   # Notebook formatı (genelde 4 kullanılır)
+            'nbformat_minor': 5  # Minor versiyon
+        }
         # Güncellenen notebook'u kaydet
         with open(notebook_filename, "w", encoding="utf-8") as f:
             try:
-                nbformat.write(nbformat.from_dict(cells), f)
+                nbformat.write(nbformat.from_dict(notebook_content), f)
             except Exception as e:
                 print(f"Notebook kaydedilirken hata oluştu: {e}")
     
