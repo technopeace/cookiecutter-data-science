@@ -270,6 +270,7 @@ def add_source_code_to_cell(cell_source, func):
 def realtime_Reader():
     import os
     import time
+    import sys
     from watchdog.observers import Observer
     from watchdog.events import FileSystemEventHandler
     from IPython.display import display, Markdown, clear_output
@@ -296,6 +297,17 @@ def realtime_Reader():
                     clear_output(wait=True)
                     display(Markdown('**Dosya bulunamadı!**'))
                 return None
+            except PermissionError:
+                # Permission hatasını yoksay
+                return None
+    
+    # Hataları baskılamak için stderr'i yönlendirme
+    class NullWriter:
+        def write(self, _):
+            pass
+    
+    original_stderr = sys.stderr
+    sys.stderr = NullWriter()  # Hataları baskıla
     
     # Observer ve Event Handler başlatılıyor
     event_handler = DosyaDegisikligiHandler()
@@ -322,8 +334,10 @@ def realtime_Reader():
     finally:
         observer.stop()
         observer.join()
+        sys.stderr = original_stderr  # stderr'i eski haline getir
     
     print("Observer durduruldu.")
+
 
 
 def run_and_remove_cell_but_keep_output(notebook_filename, cell_index_to_run):
@@ -456,17 +470,17 @@ if create_notebook_var == 'Yes':
         "nbformat_minor": 5
     }
     
-    #if use_yaml_parameters.get("use_yaml_parameters", "") == 'Yes':
+    if use_yaml_parameters.get("use_yaml_parameters", "") == 'Yes':
         #notebook_content["cells"][2]["source"] = add_source_code_to_cell(notebook_content["cells"][2]["source"], add_yaml_code)
 
-    #if "csv" in file_types_list:
-        #notebook_content["cells"][2]["source"] = add_source_code_to_cell(notebook_content["cells"][2]["source"], read_from_CSV)
+    if "csv" in file_types_list:
+        notebook_content["cells"][2]["source"] = add_source_code_to_cell(notebook_content["cells"][2]["source"], read_from_CSV)
 
-    #if remove_strange_chars_from_column.get("remove_strange_chars_from_column", "") == 'Yes':
-        #notebook_content["cells"][2]["source"] = add_source_code_to_cell(notebook_content["cells"][2]["source"], clean_column_of_df)
+    if remove_strange_chars_from_column.get("remove_strange_chars_from_column", "") == 'Yes':
+        notebook_content["cells"][2]["source"] = add_source_code_to_cell(notebook_content["cells"][2]["source"], clean_column_of_df)
 
-    #if use_yaml_parameters.get("use_yaml_parameters", "") == 'Yes':
-        #notebook_content["cells"][3]["source"] = add_source_code_to_cell(notebook_content["cells"][3]["source"], take_columns_from_yaml_to_drop_func)
+    if use_yaml_parameters.get("use_yaml_parameters", "") == 'Yes':
+        notebook_content["cells"][3]["source"] = add_source_code_to_cell(notebook_content["cells"][3]["source"], take_columns_from_yaml_to_drop_func)
 
     notebook_content["cells"][4]["source"] = add_source_code_to_cell(notebook_content["cells"][4]["source"], realtime_Reader)
     
