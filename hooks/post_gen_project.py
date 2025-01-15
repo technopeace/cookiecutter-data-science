@@ -479,11 +479,13 @@ if create_notebook_var == 'Yes':
 
     
 
-    subprocess.run([vs_code_path, notebook_filename])  # veya subprocess.call() da kullanılabilir 
+    
 
-    time.sleep(60) 
+    #time.sleep(60) 
 
     run_and_remove_cell_but_keep_output(notebook_filename, 4)
+
+    subprocess.run([vs_code_path, notebook_filename])  # veya subprocess.call() da kullanılabilir 
 
     def run_with_jupyter_background(notebook_filename):
         try:
