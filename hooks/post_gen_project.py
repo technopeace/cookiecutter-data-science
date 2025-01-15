@@ -275,13 +275,9 @@ def realtime_Reader():
     from IPython.display import display, Markdown, clear_output
     import ipywidgets as widgets
     
-    # Dosya adı
-    dosya_adi = "aciklamaa.txt"
-    
-    # Output widget'ı oluştur
+    dosya_adi = 'aciklamaa.txt'
     out = widgets.Output()
     
-    # Dosya değişikliği olayını işleyen sınıf
     class DosyaDegisikligiHandler(FileSystemEventHandler):
         def on_modified(self, event):
             if event.src_path.endswith(dosya_adi):
@@ -289,36 +285,39 @@ def realtime_Reader():
     
         def guncelle(self):
             try:
-                # Dosyayı okuma ve widget'ı güncelleme
-                with open(dosya_adi, "r", encoding="utf-8") as file:
+                with open(dosya_adi, 'r', encoding='utf-8') as file:
                     icerik = file.read()
                 with out:
-                    clear_output(wait=True)  # Önceki çıktıyı temizle
-                    display(Markdown(icerik))  # Yeni içeriği görüntüle
+                    clear_output(wait=True)
+                    display(Markdown(icerik))
             except FileNotFoundError:
-                # Dosya bulunamadığında hata mesajı göster
                 with out:
                     clear_output(wait=True)
-                    display(Markdown("**Dosya bulunamadı!**"))
-                    # Dosya kaybolduğunda da izlemeye devam et
-                    event_handler.guncelle()
+                    display(Markdown('**Dosya bulunamadı!**'))
     
-    # İzleyici ve olay işleyici oluştur
+    # Observer ve Event Handler başlatılıyor
     event_handler = DosyaDegisikligiHandler()
     observer = Observer()
-    observer.schedule(event_handler, path=".", recursive=False)
+    observer.schedule(event_handler, path='.', recursive=False)
     
-    # Widget'ı göster ve başlangıçtaki içeriği yükle
+    # Çıktıyı göster
     display(out)
-    event_handler.guncelle()  # Başlangıçtaki dosya içeriğini göster
     
-    # İzleme işlemi için izleyiciyi başlat
-    observer.start()
+    # İlk güncelleme çağrısı
+    event_handler.guncelle()
     
-    # İzleyici işlemi sürekli olarak çalışmaya devam etsin
-    import atexit
-    atexit.register(observer.stop)
-
+    # Observer'ı çalıştır ve belirli bir süre bekle
+    try:
+        observer.start()
+        for _ in range(600):  # 600 döngü = 10 dakika (600 * 1 saniye)
+            time.sleep(1)
+    except KeyboardInterrupt:
+        pass  # Manuel durdurmayı destekle
+    finally:
+        observer.stop()
+        observer.join()
+    
+    print("Observer durduruldu.")
 
 def run_and_remove_cell_but_keep_output(notebook_filename, cell_index_to_run):
     import nbformat
@@ -493,7 +492,7 @@ if create_notebook_var == 'Yes':
         # Hedef hücreye gitmek için `down` tuşuna bas
         for _ in range(cell_index):
             pyautogui.press('down')
-            time.sleep(0.1)
+            time.sleep(0.5)
         
         # Hücreyi çalıştır
         pyautogui.hotkey('Ctrl', 'Alt', 'enter')  # Hücreyi çalıştır
