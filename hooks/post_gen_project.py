@@ -496,7 +496,7 @@ if create_notebook_var == 'Yes':
         
         # Hücreyi çalıştır
         pyautogui.hotkey('Ctrl', 'Alt', 'enter')  # Hücreyi çalıştır
-         time.sleep(2)
+        time.sleep(2)
         print(f"Hücre {cell_index} çalıştırıldı!")
 
         pyautogui.typewrite("Python Environments")  # Ortam seçim komutunu yaz
