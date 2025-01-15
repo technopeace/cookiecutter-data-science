@@ -320,7 +320,7 @@ def realtime_Reader():
             "source": markdown_output
         }
         print(markdown_output)
-        print("CELLS": + cells)
+        print("CELLS:" + cells)
         cells.insert(cell_index_to_run + 1, markdown_cell)
     
         # Çalıştırılan hücreyi sil
