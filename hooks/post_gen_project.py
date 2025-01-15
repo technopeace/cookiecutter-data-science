@@ -488,7 +488,7 @@ if create_notebook_var == 'Yes':
         
         # Notebook'un başına git
         pyautogui.hotkey('ctrl', 'home')  # İlk hücreye git
-        time.sleep(35)
+        time.sleep(45)
         
         # Hedef hücreye gitmek için `down` tuşuna bas
         for _ in range(cell_index):
@@ -509,7 +509,7 @@ if create_notebook_var == 'Yes':
 
     
     # Hücreyi çalıştır
-    run_cell_with_env_selection(vs_code_path, notebook_filename, 3)
+    run_cell_with_env_selection(vs_code_path, notebook_filename, 4)
     
 
     #time.sleep(60) 
