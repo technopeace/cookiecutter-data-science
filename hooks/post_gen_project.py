@@ -265,10 +265,8 @@ def add_source_code_to_cell(cell_source, func):
     cell_source.append(cleaned_code)
     return cell_source
 
-def realtime_Reader():
-    print("Hello world")
 
-def realtime_Reader_2():
+def realtime_Reader():
     import os
     import time
     from watchdog.observers import Observer
@@ -479,23 +477,26 @@ if create_notebook_var == 'Yes':
 
     
 
-    run_and_remove_cell_but_keep_output(notebook_filename, 4)
+    #run_and_remove_cell_but_keep_output(notebook_filename, 4)
 
-    #subprocess.run([vs_code_path, notebook_filename])  # veya subprocess.call() da kullanılabilir 
+    subprocess.run([vs_code_path, notebook_filename])  # veya subprocess.call() da kullanılabilir 
 
-    try:
-        # Jupyter notebook'u çalıştır ve inplace değiştir
-        result = subprocess.run(
-            ["jupyter", "nbconvert", "--execute", "--inplace", notebook_filename],
-            check=False,  # Hata durumunda terminal sonlanmasın
-            stdout=subprocess.PIPE,  # Çıktıyı yakala
-            stderr=subprocess.PIPE   # Hataları yakala
-        )
-    
-        # Hataları kontrol et
-        if result.returncode != 0:
-            print(f"Notebook çalıştırılırken bir hata oluştu:\n{result.stderr.decode('utf-8')}")
-        else:
-            print("Notebook başarıyla çalıştırıldı.")
-    except Exception as e:
-        print(f"Bir hata oluştu: {e}")
+    def run_with_jupyter_background(notebook_filename):
+        try:
+            # Jupyter notebook'u çalıştır ve inplace değiştir
+            result = subprocess.run(
+                ["jupyter", "nbconvert", "--execute", "--inplace", notebook_filename],
+                check=False,  # Hata durumunda terminal sonlanmasın
+                stdout=subprocess.PIPE,  # Çıktıyı yakala
+                stderr=subprocess.PIPE   # Hataları yakala
+            )
+        
+            # Hataları kontrol et
+            if result.returncode != 0:
+                print(f"Notebook çalıştırılırken bir hata oluştu:\n{result.stderr.decode('utf-8')}")
+            else:
+                print("Notebook başarıyla çalıştırıldı.")
+        except Exception as e:
+            print(f"Bir hata oluştu: {e}")
+
+    #run_with_jupyter_background(notebook_filename)
