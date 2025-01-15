@@ -326,13 +326,13 @@ def realtime_Reader():
         while not stop_event:  # stop_event True olduğunda döngü sonlanır
         time.sleep(1)
         event_handler.guncelle()  # Dosya içeriğini kontrol et
-except KeyboardInterrupt:
-    pass  # Manuel durdurmayı destekle
-finally:
-    observer.stop()  # Observer'ı durdur
-    observer.join()  # Thread sonlanana kadar bekle
-
-print("Observer durduruldu.")
+    except KeyboardInterrupt:
+        pass  # Manuel durdurmayı destekle
+    finally:
+        observer.stop()  # Observer'ı durdur
+        observer.join()  # Thread sonlanana kadar bekle
+    
+    print("Observer durduruldu.")
 
 
 
