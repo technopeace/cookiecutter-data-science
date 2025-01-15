@@ -505,7 +505,7 @@ if create_notebook_var == 'Yes':
         
         # Notebook'un başına git
         pyautogui.hotkey('ctrl', 'home')  # İlk hücreye git
-        time.sleep(1)
+        time.sleep(30)
         
         # Hedef hücreye gitmek için `down` tuşuna bas
         for _ in range(cell_index):
