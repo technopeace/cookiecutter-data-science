@@ -268,7 +268,7 @@ def add_source_code_to_cell(cell_source, func):
 
 
 def realtime_Reader():
-    import os
+   import os
     import time
     from watchdog.observers import Observer
     from watchdog.events import FileSystemEventHandler
@@ -290,10 +290,14 @@ def realtime_Reader():
                 with out:
                     clear_output(wait=True)
                     display(Markdown(icerik))
+    
                 # Eğer içerik $endread$ içeriyorsa işlem sonlanır
                 if '$endread$' in icerik:
                     print("Dosyada $endread$ bulundu, işlem sonlandırılıyor.")
-                    observer.stop()  # Observer'ı durdur
+                    # Observer'ı durdurmak için flag kullanıyoruz
+                    global stop_event
+                    stop_event = True
+    
             except FileNotFoundError:
                 with out:
                     clear_output(wait=True)
@@ -313,19 +317,23 @@ def realtime_Reader():
     # İlk güncelleme çağrısı
     event_handler.guncelle()
     
+    # Global stop_event bayrağını oluştur
+    stop_event = False
+    
     # Observer'ı çalıştır ve kontrol döngüsüne gir
     try:
         observer.start()
-        for _ in range(600):  # 600 döngü = 10 dakika (600 * 1 saniye)
-            time.sleep(1)
-            event_handler.guncelle()  # Dosya içeriğini kontrol et
-    except KeyboardInterrupt:
-        pass  # Manuel durdurmayı destekle
-    finally:
-        observer.stop()
-        observer.join()
-    
-    print("Observer durduruldu.")
+        while not stop_event:  # stop_event True olduğunda döngü sonlanır
+        time.sleep(1)
+        event_handler.guncelle()  # Dosya içeriğini kontrol et
+except KeyboardInterrupt:
+    pass  # Manuel durdurmayı destekle
+finally:
+    observer.stop()  # Observer'ı durdur
+    observer.join()  # Thread sonlanana kadar bekle
+
+print("Observer durduruldu.")
+
 
 
 
