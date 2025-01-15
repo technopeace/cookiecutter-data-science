@@ -290,10 +290,12 @@ def realtime_Reader():
                 with out:
                     clear_output(wait=True)
                     display(Markdown(icerik))
+                return icerik  # İçeriği döndür
             except FileNotFoundError:
                 with out:
                     clear_output(wait=True)
                     display(Markdown('**Dosya bulunamadı!**'))
+                return None
     
     # Observer ve Event Handler başlatılıyor
     event_handler = DosyaDegisikligiHandler()
@@ -304,13 +306,17 @@ def realtime_Reader():
     display(out)
     
     # İlk güncelleme çağrısı
-    event_handler.guncelle()
+    icerik = event_handler.guncelle()
     
-    # Observer'ı çalıştır ve belirli bir süre bekle
+    # Observer'ı çalıştır ve kontrol döngüsüne gir
     try:
         observer.start()
         for _ in range(600):  # 600 döngü = 10 dakika (600 * 1 saniye)
             time.sleep(1)
+            icerik = event_handler.guncelle()  # Dosya içeriğini kontrol et
+            if icerik and '$endread$' in icerik:  # $endread$ ifadesi varsa çık
+                print("Dosyada $endread$ bulundu, işlem sonlandırılıyor.")
+                break
     except KeyboardInterrupt:
         pass  # Manuel durdurmayı destekle
     finally:
@@ -318,6 +324,7 @@ def realtime_Reader():
         observer.join()
     
     print("Observer durduruldu.")
+
 
 def run_and_remove_cell_but_keep_output(notebook_filename, cell_index_to_run):
     import nbformat
