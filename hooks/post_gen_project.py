@@ -311,9 +311,7 @@ def realtime_Reader():
     from IPython.display import display, Markdown, clear_output
     import ipywidgets as widgets
     import nbformat
-    def code_clear(cells, cell_index_to_run, icerik):
-        markdown_output = Markdown(icerik)
-    
+    def code_clear(cells, cell_index_to_run, markdown_output): 
         markdown_cell = {
             "cell_type": "markdown",
             "metadata": {},
