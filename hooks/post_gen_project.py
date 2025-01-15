@@ -322,9 +322,12 @@ def realtime_Reader():
         print("icerik:" + icerik)
         print(cells)
         cells.insert(cell_index_to_run + 1, markdown_cell)
-    
+        print("afterinsert")
+        print(cells)
         # Çalıştırılan hücreyi sil
         del cells[cell_index_to_run]
+        print("afterdelete")
+        print(cells)
     
         # Güncellenen notebook'u kaydet
         with open(notebook_filename, "w", encoding="utf-8") as f:
