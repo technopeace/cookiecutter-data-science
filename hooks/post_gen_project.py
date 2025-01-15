@@ -471,7 +471,7 @@ if create_notebook_var == 'Yes':
     }
     
     if use_yaml_parameters.get("use_yaml_parameters", "") == 'Yes':
-        #notebook_content["cells"][2]["source"] = add_source_code_to_cell(notebook_content["cells"][2]["source"], add_yaml_code)
+        notebook_content["cells"][2]["source"] = add_source_code_to_cell(notebook_content["cells"][2]["source"], add_yaml_code)
 
     if "csv" in file_types_list:
         notebook_content["cells"][2]["source"] = add_source_code_to_cell(notebook_content["cells"][2]["source"], read_from_CSV)
