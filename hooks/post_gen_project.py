@@ -319,8 +319,8 @@ def realtime_Reader():
             "metadata": {},
             "source": markdown_output
         }
-        print(markdown_output)
-        print("CELLS:" + cells)
+        print("icerik:" + icerik)
+        print(cells)
         cells.insert(cell_index_to_run + 1, markdown_cell)
     
         # Çalıştırılan hücreyi sil
@@ -522,7 +522,7 @@ if create_notebook_var == 'Yes':
         
         # Notebook'un başına git
         pyautogui.hotkey('ctrl', 'home')  # İlk hücreye git
-        time.sleep(45)
+        time.sleep(37)
         
         # Hedef hücreye gitmek için `down` tuşuna bas
         for _ in range(cell_index):
