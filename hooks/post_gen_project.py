@@ -312,12 +312,6 @@ def realtime_Reader():
     import ipywidgets as widgets
     import nbformat
     def code_clear(cells, cell_index_to_run, icerik):
-        # Çıktıyı korumak için kodu temizle ama hücreyi tamamen silme
-        #cells[cell_index_to_run]["source"] = ""
-    
-        # Çalıştırılan hücreden çıkan çıktıyı alın
-        cell_to_run = cells[cell_index_to_run]
-        outputs = cell_to_run.get("outputs", [])
         markdown_output = Markdown(icerik)
     
         markdown_cell = {
@@ -325,6 +319,8 @@ def realtime_Reader():
             "metadata": {},
             "source": markdown_output
         }
+        print(markdown_output)
+        print("CELLS": + cells)
         cells.insert(cell_index_to_run + 1, markdown_cell)
     
         # Çalıştırılan hücreyi sil
