@@ -311,29 +311,21 @@ def realtime_Reader():
     from IPython.display import display, Markdown, clear_output
     import ipywidgets as widgets
     import nbformat
-    def code_clear(cells, cell_index_to_run):
+    def code_clear(cells, cell_index_to_run, icerik):
         # Çıktıyı korumak için kodu temizle ama hücreyi tamamen silme
         #cells[cell_index_to_run]["source"] = ""
     
         # Çalıştırılan hücreden çıkan çıktıyı alın
         cell_to_run = cells[cell_index_to_run]
         outputs = cell_to_run.get("outputs", [])
-        markdown_output = ""
+        markdown_output = Markdown(icerik)
     
-        for output in outputs:
-            if "text" in output:
-                markdown_output += output["text"]  # Text çıktısı
-            elif "text/plain" in output.get("data", {}):
-                markdown_output += output["data"]["text/plain"]  # Plain text çıktısı
-    
-        # Çıkışları Markdown hücresi olarak ekle
-        if markdown_output.strip():
-            markdown_cell = {
-                "cell_type": "markdown",
-                "metadata": {},
-                "source": markdown_output
-            }
-            cells.insert(cell_index_to_run + 1, markdown_cell)
+        markdown_cell = {
+            "cell_type": "markdown",
+            "metadata": {},
+            "source": markdown_output
+        }
+        cells.insert(cell_index_to_run + 1, markdown_cell)
     
         # Çalıştırılan hücreyi sil
         del cells[cell_index_to_run]
@@ -407,7 +399,7 @@ def realtime_Reader():
     print("Observer durduruldu.")
     with open(notebook_filename, "r", encoding="utf-8") as f:
         notebook_content = nbformat.read(f, as_version=4)
-    code_clear(notebook_content["cells"], 4)
+    code_clear(notebook_content["cells"], 4, icerik)
 
 
 
