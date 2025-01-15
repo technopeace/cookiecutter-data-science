@@ -270,7 +270,6 @@ def add_source_code_to_cell(cell_source, func):
 def realtime_Reader():
     import os
     import time
-    import sys
     from watchdog.observers import Observer
     from watchdog.events import FileSystemEventHandler
     from IPython.display import display, Markdown, clear_output
@@ -291,23 +290,17 @@ def realtime_Reader():
                 with out:
                     clear_output(wait=True)
                     display(Markdown(icerik))
-                return icerik  # İçeriği döndür
+                # Eğer içerik $endread$ içeriyorsa işlem sonlanır
+                if '$endread$' in icerik:
+                    print("Dosyada $endread$ bulundu, işlem sonlandırılıyor.")
+                    observer.stop()  # Observer'ı durdur
             except FileNotFoundError:
                 with out:
                     clear_output(wait=True)
                     display(Markdown('**Dosya bulunamadı!**'))
-                return None
             except PermissionError:
-                # Permission hatasını yoksay
-                return None
-    
-    # Hataları baskılamak için stderr'i yönlendirme
-    class NullWriter:
-        def write(self, _):
-            pass
-    
-    original_stderr = sys.stderr
-    sys.stderr = NullWriter()  # Hataları baskıla
+                # PermissionError'ı yoksay, hatayı yazdırma
+                pass
     
     # Observer ve Event Handler başlatılıyor
     event_handler = DosyaDegisikligiHandler()
@@ -318,25 +311,22 @@ def realtime_Reader():
     display(out)
     
     # İlk güncelleme çağrısı
-    icerik = event_handler.guncelle()
+    event_handler.guncelle()
     
     # Observer'ı çalıştır ve kontrol döngüsüne gir
     try:
         observer.start()
         for _ in range(600):  # 600 döngü = 10 dakika (600 * 1 saniye)
             time.sleep(1)
-            icerik = event_handler.guncelle()  # Dosya içeriğini kontrol et
-            if icerik and '$endread$' in icerik:  # $endread$ ifadesi varsa çık
-                print("Dosyada $endread$ bulundu, işlem sonlandırılıyor.")
-                break
+            event_handler.guncelle()  # Dosya içeriğini kontrol et
     except KeyboardInterrupt:
         pass  # Manuel durdurmayı destekle
     finally:
         observer.stop()
         observer.join()
-        sys.stderr = original_stderr  # stderr'i eski haline getir
     
     print("Observer durduruldu.")
+
 
 
 
