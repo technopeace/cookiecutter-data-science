@@ -486,18 +486,6 @@ if create_notebook_var == 'Yes':
         # VS Code'un yüklenmesi için süre tanı
         time.sleep(5)
         
-        # Python Environment seçimi
-        pyautogui.hotkey('ctrl', 'shift', 'p')  # Komut paletini aç
-        time.sleep(1)
-        pyautogui.typewrite("Python: Select Interpreter")  # Ortam seçim komutunu yaz
-        pyautogui.press('enter')  # Komutu çalıştır
-        time.sleep(2)
-    
-        # "Python 3.9" seçimi
-        pyautogui.typewrite("Python 3.9")  # Python sürümünü yaz
-        pyautogui.press('enter')
-        time.sleep(5)  # Ortamın yüklenmesini bekle
-        
         # Notebook'un başına git
         pyautogui.hotkey('ctrl', 'home')  # İlk hücreye git
         time.sleep(35)
@@ -510,6 +498,14 @@ if create_notebook_var == 'Yes':
         # Hücreyi çalıştır
         pyautogui.hotkey('shift', 'enter')  # Hücreyi çalıştır
         print(f"Hücre {cell_index} çalıştırıldı!")
+
+        pyautogui.typewrite("Python Environments")  # Ortam seçim komutunu yaz
+        pyautogui.press('enter')  # Komutu çalıştır
+        time.sleep(2)
+    
+        # "Python 3.9" seçimi
+        pyautogui.typewrite("Python 3.9")  # Python sürümünü yaz
+        pyautogui.press('enter')
 
     
     # Hücreyi çalıştır
